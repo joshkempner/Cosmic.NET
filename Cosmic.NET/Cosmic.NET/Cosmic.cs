@@ -316,8 +316,7 @@ namespace Cosmic.NET
                 // proceed only if the redshift validated
                 if (!ce.Cancel)
                 {
-                    // Give the Calculate button focus and raise a click event on it
-                    Calculate.Focus();
+                    // Raise a click event on the Calculate button
                     InvokeOnClick(Calculate, new EventArgs());
                 }
             }
@@ -420,6 +419,17 @@ namespace Cosmic.NET
                     MessageBox.Show(ex.Message, "Error writing file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        #endregion
+
+        #region Other Event Handlers
+
+        private void Results_TextChanged(object sender, EventArgs e)
+        {
+            Results.SelectionStart = Results.Text.Length;
+            Results.SelectionLength = 0;
+            Results.ScrollToCaret();
         }
 
         #endregion
