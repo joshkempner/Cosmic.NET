@@ -81,7 +81,6 @@
             this.OmegaLambda.Name = "OmegaLambda";
             this.OmegaLambda.Size = new System.Drawing.Size(34, 20);
             this.OmegaLambda.TabIndex = 8;
-            this.OmegaLambda.Text = "0.73";
             this.OmegaLambda.Validated += new System.EventHandler(this.OmegaLambda_Validated);
             this.OmegaLambda.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OmegaLambda_KeyPress);
             this.OmegaLambda.Validating += new System.ComponentModel.CancelEventHandler(this.OmegaLambda_Validating);
@@ -112,7 +111,6 @@
             this.OmegaMatter.Name = "OmegaMatter";
             this.OmegaMatter.Size = new System.Drawing.Size(34, 20);
             this.OmegaMatter.TabIndex = 5;
-            this.OmegaMatter.Text = "0.27";
             this.OmegaMatter.Validated += new System.EventHandler(this.OmegaMatter_Validated);
             this.OmegaMatter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OmegaMatter_KeyPress);
             this.OmegaMatter.Validating += new System.ComponentModel.CancelEventHandler(this.OmegaMatter_Validating);
@@ -143,7 +141,6 @@
             this.HubbleConstant.Name = "HubbleConstant";
             this.HubbleConstant.Size = new System.Drawing.Size(34, 20);
             this.HubbleConstant.TabIndex = 2;
-            this.HubbleConstant.Text = "71";
             this.HubbleConstant.Validated += new System.EventHandler(this.HubbleConstant_Validated);
             this.HubbleConstant.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HubbleConstant_KeyPress);
             this.HubbleConstant.Validating += new System.ComponentModel.CancelEventHandler(this.HubbleConstant_Validating);
@@ -324,6 +321,7 @@
             this.Results.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.Results.Size = new System.Drawing.Size(232, 143);
             this.Results.TabIndex = 0;
+            this.Results.TextChanged += new System.EventHandler(this.Results_TextChanged);
             // 
             // Cosmic
             // 
