@@ -56,29 +56,10 @@ namespace Cosmic.NET
 
         private void Cosmic_Layout(object sender, LayoutEventArgs e)
         {
-            // resize the group boxes
-            CosmologicalParameters.Width = Width - 32;
-            SourceParameters.Width = Width - 32;
-            ResultsGroupBox.Width = Width - 32;
-            ResultsGroupBox.Height = Height - ResultsGroupBox.Top - 46;
-
             // adjust the layout of the cosmological parameters fields
-            OmegaLambda.Left = CosmologicalParameters.Width - 57;
-            LambdaLabel.Left = OmegaLambda.Left - 14;
-            OmegaLambdaLabel.Left = LambdaLabel.Left - 11;
             OmegaMatter.Left = (OmegaLambda.Left - HubbleConstant.Left) / 2 + HubbleConstant.Left;
             MatterLabel.Left = OmegaMatter.Left - 14;
             OmegaMatterLabel.Left = MatterLabel.Left - 11;
-
-            // adjust the layout of the multi-source file fields and buttons
-            OpenFromBrowseButton.Left = SourceParameters.Width - 32;
-            OpenFrom.Width = SourceParameters.Width - 73;
-            SaveToBrowseButton.Left = SourceParameters.Width - 32;
-            SaveTo.Width = SourceParameters.Width - 73;
-
-            //adjust the layout of the output panel
-            Results.Width = ResultsGroupBox.Width - 13;
-            Results.Height = ResultsGroupBox.Height - 26;
         }
 
         private void Cosmic_FormClosing(object sender, FormClosingEventArgs e)
