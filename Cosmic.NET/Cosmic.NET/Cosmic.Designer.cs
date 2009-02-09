@@ -59,6 +59,8 @@
             // 
             // CosmologicalParameters
             // 
+            this.CosmologicalParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.CosmologicalParameters.Controls.Add(this.OmegaLambda);
             this.CosmologicalParameters.Controls.Add(this.LambdaLabel);
             this.CosmologicalParameters.Controls.Add(this.OmegaLambdaLabel);
@@ -77,6 +79,7 @@
             // 
             // OmegaLambda
             // 
+            this.OmegaLambda.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.OmegaLambda.Location = new System.Drawing.Point(188, 18);
             this.OmegaLambda.Name = "OmegaLambda";
             this.OmegaLambda.Size = new System.Drawing.Size(34, 20);
@@ -87,6 +90,7 @@
             // 
             // LambdaLabel
             // 
+            this.LambdaLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.LambdaLabel.AutoSize = true;
             this.LambdaLabel.Font = new System.Drawing.Font("Symbol", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.LambdaLabel.Location = new System.Drawing.Point(174, 26);
@@ -97,6 +101,7 @@
             // 
             // OmegaLambdaLabel
             // 
+            this.OmegaLambdaLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.OmegaLambdaLabel.AutoSize = true;
             this.OmegaLambdaLabel.Font = new System.Drawing.Font("Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.OmegaLambdaLabel.Location = new System.Drawing.Point(163, 21);
@@ -166,6 +171,8 @@
             // 
             // SourceParameters
             // 
+            this.SourceParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.SourceParameters.Controls.Add(this.Calculate);
             this.SourceParameters.Controls.Add(this.SaveToBrowseButton);
             this.SourceParameters.Controls.Add(this.SaveTo);
@@ -196,6 +203,7 @@
             // 
             // SaveToBrowseButton
             // 
+            this.SaveToBrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.SaveToBrowseButton.AutoSize = true;
             this.SaveToBrowseButton.Enabled = false;
             this.SaveToBrowseButton.Location = new System.Drawing.Point(213, 123);
@@ -208,6 +216,8 @@
             // 
             // SaveTo
             // 
+            this.SaveTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.SaveTo.Enabled = false;
             this.SaveTo.Location = new System.Drawing.Point(35, 125);
             this.SaveTo.Name = "SaveTo";
@@ -228,6 +238,7 @@
             // 
             // OpenFromBrowseButton
             // 
+            this.OpenFromBrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.OpenFromBrowseButton.AutoSize = true;
             this.OpenFromBrowseButton.Enabled = false;
             this.OpenFromBrowseButton.Location = new System.Drawing.Point(213, 83);
@@ -240,6 +251,8 @@
             // 
             // OpenFrom
             // 
+            this.OpenFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.OpenFrom.Enabled = false;
             this.OpenFrom.Location = new System.Drawing.Point(35, 85);
             this.OpenFrom.Name = "OpenFrom";
@@ -303,6 +316,9 @@
             // 
             // ResultsGroupBox
             // 
+            this.ResultsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.ResultsGroupBox.Controls.Add(this.Results);
             this.ResultsGroupBox.Location = new System.Drawing.Point(12, 257);
             this.ResultsGroupBox.Name = "ResultsGroupBox";
@@ -313,6 +329,9 @@
             // 
             // Results
             // 
+            this.Results.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.Results.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Results.Location = new System.Drawing.Point(7, 20);
             this.Results.Multiline = true;
