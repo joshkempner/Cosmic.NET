@@ -59,8 +59,8 @@
             // 
             // CosmologicalParameters
             // 
-            this.CosmologicalParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.CosmologicalParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.CosmologicalParameters.Controls.Add(this.OmegaLambda);
             this.CosmologicalParameters.Controls.Add(this.LambdaLabel);
             this.CosmologicalParameters.Controls.Add(this.OmegaLambdaLabel);
@@ -84,9 +84,9 @@
             this.OmegaLambda.Name = "OmegaLambda";
             this.OmegaLambda.Size = new System.Drawing.Size(34, 20);
             this.OmegaLambda.TabIndex = 8;
-            this.OmegaLambda.Validated += new System.EventHandler(this.OmegaLambda_Validated);
             this.OmegaLambda.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OmegaLambda_KeyPress);
             this.OmegaLambda.Validating += new System.ComponentModel.CancelEventHandler(this.OmegaLambda_Validating);
+            this.OmegaLambda.Validated += new System.EventHandler(this.OmegaLambda_Validated);
             // 
             // LambdaLabel
             // 
@@ -104,9 +104,9 @@
             this.OmegaLambdaLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.OmegaLambdaLabel.AutoSize = true;
             this.OmegaLambdaLabel.Font = new System.Drawing.Font("Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.OmegaLambdaLabel.Location = new System.Drawing.Point(163, 21);
+            this.OmegaLambdaLabel.Location = new System.Drawing.Point(162, 21);
             this.OmegaLambdaLabel.Name = "OmegaLambdaLabel";
-            this.OmegaLambdaLabel.Size = new System.Drawing.Size(15, 13);
+            this.OmegaLambdaLabel.Size = new System.Drawing.Size(16, 13);
             this.OmegaLambdaLabel.TabIndex = 6;
             this.OmegaLambdaLabel.Text = "W";
             // 
@@ -116,9 +116,9 @@
             this.OmegaMatter.Name = "OmegaMatter";
             this.OmegaMatter.Size = new System.Drawing.Size(34, 20);
             this.OmegaMatter.TabIndex = 5;
-            this.OmegaMatter.Validated += new System.EventHandler(this.OmegaMatter_Validated);
             this.OmegaMatter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OmegaMatter_KeyPress);
             this.OmegaMatter.Validating += new System.ComponentModel.CancelEventHandler(this.OmegaMatter_Validating);
+            this.OmegaMatter.Validated += new System.EventHandler(this.OmegaMatter_Validated);
             // 
             // MatterLabel
             // 
@@ -134,9 +134,9 @@
             // 
             this.OmegaMatterLabel.AutoSize = true;
             this.OmegaMatterLabel.Font = new System.Drawing.Font("Symbol", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
-            this.OmegaMatterLabel.Location = new System.Drawing.Point(85, 20);
+            this.OmegaMatterLabel.Location = new System.Drawing.Point(84, 20);
             this.OmegaMatterLabel.Name = "OmegaMatterLabel";
-            this.OmegaMatterLabel.Size = new System.Drawing.Size(15, 13);
+            this.OmegaMatterLabel.Size = new System.Drawing.Size(16, 13);
             this.OmegaMatterLabel.TabIndex = 3;
             this.OmegaMatterLabel.Text = "W";
             // 
@@ -146,9 +146,9 @@
             this.HubbleConstant.Name = "HubbleConstant";
             this.HubbleConstant.Size = new System.Drawing.Size(34, 20);
             this.HubbleConstant.TabIndex = 2;
-            this.HubbleConstant.Validated += new System.EventHandler(this.HubbleConstant_Validated);
             this.HubbleConstant.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HubbleConstant_KeyPress);
             this.HubbleConstant.Validating += new System.ComponentModel.CancelEventHandler(this.HubbleConstant_Validating);
+            this.HubbleConstant.Validated += new System.EventHandler(this.HubbleConstant_Validated);
             // 
             // label2
             // 
@@ -171,8 +171,8 @@
             // 
             // SourceParameters
             // 
-            this.SourceParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.SourceParameters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.SourceParameters.Controls.Add(this.Calculate);
             this.SourceParameters.Controls.Add(this.SaveToBrowseButton);
             this.SourceParameters.Controls.Add(this.SaveTo);
@@ -216,8 +216,8 @@
             // 
             // SaveTo
             // 
-            this.SaveTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.SaveTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.SaveTo.Enabled = false;
             this.SaveTo.Location = new System.Drawing.Point(35, 125);
             this.SaveTo.Name = "SaveTo";
@@ -251,8 +251,8 @@
             // 
             // OpenFrom
             // 
-            this.OpenFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.OpenFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.OpenFrom.Enabled = false;
             this.OpenFrom.Location = new System.Drawing.Point(35, 85);
             this.OpenFrom.Name = "OpenFrom";
@@ -277,9 +277,9 @@
             this.Redshift.Name = "Redshift";
             this.Redshift.Size = new System.Drawing.Size(60, 20);
             this.Redshift.TabIndex = 3;
-            this.Redshift.Validated += new System.EventHandler(this.Redshift_Validated);
             this.Redshift.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Redshift_KeyPress);
             this.Redshift.Validating += new System.ComponentModel.CancelEventHandler(this.Redshift_Validating);
+            this.Redshift.Validated += new System.EventHandler(this.Redshift_Validated);
             // 
             // RedshiftLabel
             // 
@@ -316,9 +316,9 @@
             // 
             // ResultsGroupBox
             // 
-            this.ResultsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.ResultsGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ResultsGroupBox.Controls.Add(this.Results);
             this.ResultsGroupBox.Location = new System.Drawing.Point(12, 257);
             this.ResultsGroupBox.Name = "ResultsGroupBox";
@@ -329,9 +329,9 @@
             // 
             // Results
             // 
-            this.Results.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.Results.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Results.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Results.Location = new System.Drawing.Point(7, 20);
             this.Results.Multiline = true;
@@ -353,9 +353,9 @@
             this.MinimumSize = new System.Drawing.Size(277, 472);
             this.Name = "Cosmic";
             this.Text = "Cosmic";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Cosmic_FormClosing);
             this.Load += new System.EventHandler(this.Cosmic_Load);
             this.Layout += new System.Windows.Forms.LayoutEventHandler(this.Cosmic_Layout);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Cosmic_FormClosing);
             this.CosmologicalParameters.ResumeLayout(false);
             this.CosmologicalParameters.PerformLayout();
             this.SourceParameters.ResumeLayout(false);

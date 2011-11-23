@@ -59,7 +59,7 @@ namespace Cosmic.NET
             // adjust the layout of the cosmological parameters fields
             OmegaMatter.Left = (OmegaLambda.Left - HubbleConstant.Left) / 2 + HubbleConstant.Left;
             MatterLabel.Left = OmegaMatter.Left - 14;
-            OmegaMatterLabel.Left = MatterLabel.Left - 11;
+            OmegaMatterLabel.Left = MatterLabel.Left - 12;
         }
 
         private void Cosmic_FormClosing(object sender, FormClosingEventArgs e)
