@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosmic.NET", "Cosmic.NET\Cosmic.NET.csproj", "{C862934A-F83A-4BF6-8D59-E952DE5A4968}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cosmo", "cosmo\Cosmo.csproj", "{6832DDEB-C0F3-4AF2-846C-FB8ED3494F42}"
