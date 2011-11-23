@@ -9,30 +9,17 @@ namespace Cosmo
     {
         #region Fields
 
-        // physical contsants in cgs units unless otherwise specified
+        // physical constants in cgs units unless otherwise specified
         public const double c = 2.99792458e5; // speed of light
         public const double G = 6.67259e-8;   // gravitational constant
         public const double kmPerMpc = 3.08567758e19;
         public const double tropicalYear = 3.1556926e7; // in seconds
 
         // cosmological parameters
-        private double _h0, _q0; // Hubble constant at z=0, q_0
-        private double _omegaM, _omegaL, _omegaK; // scaled densities of matter, vacuum energy, and curvature
+        private double _h0;      // Hubble constant at z=0
+        private double _omegaM, _omegaL; // scaled densities of matter and vacuum energy
         private double _dH;      // Hubble distance
         private double _z;       // redshift of source
-
-        // distance measures to source in Mpc
-        private double _dA;      // angular diameter distance
-        private double _dL;      // luminosity distance
-        private double _dC;      // comoving line-of-sight distance
-        private double _dM;      // comoving transverse distance
-        private double _VC;      // comoving volume out to redshift _z in cubic Gpc
-
-        // other quantities derived from the redshift _z
-        private double _tL;      // lookback time to _z in seconds
-        private double _age;     // current age of the universe in seconds
-        private double _scale;   // kpc/arcsec at the redshift of the source
-        private double _rhoCrit; // critical density of the universe at the redshift of the source
 
         // delegate used for passing functions for Romberg integration
         private delegate double Integrand(double a);
@@ -42,7 +29,7 @@ namespace Cosmo
         #region Properties
 
         /// <summary>
-        /// Get or set the value of the Hubble constant
+        /// Get or set the value of the Hubble constant.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value set is &lt;= 0</exception>
         public double H0
@@ -58,7 +45,7 @@ namespace Cosmo
         }
 
         /// <summary>
-        /// Get or set the value of the normalized density of matter
+        /// Get or set the value of the normalized density of matter.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value set is &lt; 0</exception>
         public double OmegaMatter
@@ -74,7 +61,7 @@ namespace Cosmo
         }
 
         /// <summary>
-        /// Get or set the value of the normalized density due to a cosmological constant
+        /// Get or set the value of the normalized density due to a cosmological constant.
         /// </summary>
         public double OmegaLambda
         {
@@ -87,23 +74,25 @@ namespace Cosmo
         }
 
         /// <summary>
-        /// Normalized density due to curvature
+        /// Get the normalized density due to curvature.
         /// </summary>
         public double OmegaKappa
         {
-            get { return _omegaK; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// Deceleration parameter
+        /// Get the deceleration parameter.
         /// </summary>
         public double q0
         {
-            get { return _q0; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// Get or set the Redshift of the event
+        /// Get or set the Redshift of the event.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value set is &lt; 0</exception>
         public double Redshift
@@ -119,75 +108,84 @@ namespace Cosmo
         }
 
         /// <summary>
-        /// Angular diameter distance to an event at the defined redshift
+        /// Get the angular diameter distance (D_A) to an event at the defined redshift in Mpc.
         /// </summary>
         public double AngularDiameterDistance
         {
-            get { return _dA; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// Luminosity distance to an event at the defined redshift
+        /// Get the luminosity distance (D_L)to an event at the defined redshift in Mpc.
         /// </summary>
         public double LuminosityDistance
         {
-            get { return _dL; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// The line-of-sight comoving distance to an event at the defined redshift
+        /// Get the line-of-sight comoving distance (D_C) to an event at the defined redshift in Mpc.
         /// </summary>
         public double ComovingDistance
         {
-            get { return _dC; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// Transverse comoving distance. The comoving distance between two events at the defined redshift
+        /// Get the transverse comoving distance (D_M). The comoving distance between two events at the defined redshift in Mpc.
         /// </summary>
         public double TransverseDistance
         {
-            get { return _dM; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// The volume enclosed in a sphere centered on us and extending to an event at the defined redshift
+        /// Get the volume enclosed in a sphere centered on us and extending to an event at the defined redshift, in cubic Gpc.
         /// </summary>
         public double ComovingVolume
         {
-            get { return _VC; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// The light travel time for light to reach us at z=0 from the defined redshift
+        /// Get the light travel time for light to reach us at z=0 from the defined redshift, in seconds.
         /// </summary>
         public double LookbackTime
         {
-            get { return _tL; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// The angular scale at the defined redshift in kiloparsecs per arcsecond
+        /// Get the angular scale at the defined redshift, in kiloparsecs per arcsecond.
         /// </summary>
         public double KpcPerArcsec
         {
-            get { return _scale; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// The critical density required to close the Universe at the defined redshift
+        /// Get the critical density required to close the Universe at the defined redshift, in grams per cubic centimeter.
         /// </summary>
         public double CriticalDensity
         {
-            get { return _rhoCrit; }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// The age of the Universe at z=0
+        /// The age of the Universe at z=0, in seconds.
         /// </summary>
         public double Age
         {
-            get { return _age; }
+            get;
+            private set;
         }
 
         #endregion
@@ -328,14 +326,14 @@ namespace Cosmo
         private void SetDerivedParameters()
         {
             // curvature
-            _omegaK = 1.0 - _omegaM - _omegaL;
-            if (_omegaK <= Double.Epsilon)
-                _omegaK = 0.0;
+            OmegaKappa = 1.0 - _omegaM - _omegaL;
+            if (Math.Abs(OmegaKappa) <= Double.Epsilon)
+                OmegaKappa = 0.0;
 
             // other derived quantities
-            _q0 = 0.5 * _omegaM - _omegaL;
+            q0 = 0.5 * _omegaM - _omegaL;
             _dH = c / _h0;
-            _age = Romberg(new Integrand(AgeIntegrand), 0, 1000) / _h0 * kmPerMpc;
+            Age = Romberg(new Integrand(AgeIntegrand), 0, 1000) / _h0 * kmPerMpc;
 
             // initialize the redshift if needed, and always set the distance measures
             if (_z < 0)
@@ -346,7 +344,7 @@ namespace Cosmo
         // Calculate the expansion factor at a given redshift
         private double E(double z)
         {
-            return Math.Sqrt(_omegaM * Math.Pow(1+z, 3) + _omegaK * Math.Pow(1+z, 2) + _omegaL);
+            return Math.Sqrt(_omegaM * Math.Pow(1 + z, 3) + OmegaKappa * Math.Pow(1 + z, 2) + _omegaL);
         }
 
         // The inverse of the expansion factor. We need this as a function so it can be used as
@@ -404,51 +402,51 @@ namespace Cosmo
         private void SetDistances()
         {
             // calculate critical density
-            _rhoCrit = 3.0 / (8.0 * Math.PI) * Math.Pow(_h0 / kmPerMpc, 2) / G *
+            CriticalDensity = 3.0 / (8.0 * Math.PI) * Math.Pow(_h0 / kmPerMpc, 2) / G *
                 (_omegaL + Math.Pow(1 + _z, 3) * _omegaM);
             
             // everything else is simple if the redshift is zero
             if (_z == 0)
             {
-                _dC = _dM = _VC = _dA = _dL = _tL = 0;
-                _scale = 0;
+                ComovingDistance = TransverseDistance = ComovingVolume = AngularDiameterDistance = LuminosityDistance = LookbackTime = 0;
+                KpcPerArcsec = 0;
                 return;
             }
 
             // calculate the line-of-sight comoving distance using Romberg integration
-            _dC = _dH * Romberg(new Integrand(InverseOfE), 0, _z);
+            ComovingDistance = _dH * Romberg(new Integrand(InverseOfE), 0, _z);
             
             // calculate the comoving transverse distance and comoving volume from the comoving
             // line-of-sight distance
             if (OmegaKappa > 0)
             {
-                _dM = _dH / Math.Sqrt(_omegaK) * Math.Sinh(Math.Sqrt(_omegaK) * _dC / _dH);
-                _VC = 2 * Math.PI * Math.Pow(_dH, 3) / _omegaK *
-                    (_dM / _dH * Math.Sqrt(1 + _omegaK * Math.Pow(_dM / _dH, 3)) -
-                    Asinh(Math.Abs(_omegaK) * _dM / _dH) / Math.Sqrt(_omegaK)) / 1e9;
+                TransverseDistance = _dH / Math.Sqrt(OmegaKappa) * Math.Sinh(Math.Sqrt(OmegaKappa) * ComovingDistance / _dH);
+                ComovingVolume = 2 * Math.PI * Math.Pow(_dH, 3) / OmegaKappa *
+                    (TransverseDistance / _dH * Math.Sqrt(1 + OmegaKappa * Math.Pow(TransverseDistance / _dH, 2)) -
+                    Asinh(Math.Sqrt(Math.Abs(OmegaKappa)) * TransverseDistance / _dH) / Math.Sqrt(Math.Abs(OmegaKappa))) / 1e9;
             }
             else if (OmegaKappa < 0)
             {
-                _dM = _dH / Math.Sqrt(Math.Abs(_omegaK)) * Math.Sin(Math.Sqrt(Math.Abs(_omegaK)) * _dC / _dH);
-                _VC = 2 * Math.PI * Math.Pow(_dH, 3) / Math.Abs(_omegaK) *
-                    (_dM / _dH * Math.Sqrt(1 + _omegaK * Math.Pow(_dM / _dH, 2)) -
-                     Math.Asin(Math.Abs(_omegaK) * _dM / _dH) / Math.Sqrt(Math.Abs(_omegaK))) / 1e9;
+                TransverseDistance = _dH / Math.Sqrt(Math.Abs(OmegaKappa)) * Math.Sin(Math.Sqrt(Math.Abs(OmegaKappa)) * ComovingDistance / _dH);
+                ComovingVolume = 2 * Math.PI * Math.Pow(_dH, 3) / OmegaKappa *
+                    (TransverseDistance / _dH * Math.Sqrt(1 + OmegaKappa * Math.Pow(TransverseDistance / _dH, 2)) -
+                     Math.Asin(Math.Sqrt(Math.Abs(OmegaKappa)) * TransverseDistance / _dH) / Math.Sqrt(Math.Abs(OmegaKappa))) / 1e9;
             }
             else
             {
-                _dM = _dC;
-                _VC = 4 * Math.PI * Math.Pow(_dM, 3) / 3 / 1e9;
+                TransverseDistance = ComovingDistance;
+                ComovingVolume = 4 * Math.PI * Math.Pow(TransverseDistance, 3) / 3 / 1e9;
             }
 
             // calculate angular diameter distance and luminosity distance from the comoving transverse distance
-            _dA = _dM / (1 + _z);
-            _dL = _dM * (1 + _z);
+            AngularDiameterDistance = TransverseDistance / (1 + _z);
+            LuminosityDistance = TransverseDistance * (1 + _z);
 
             // calculate an angular scale in kpc/arcsec from the angular diameter distance
-            _scale = _dA / 648 * Math.PI;
+            KpcPerArcsec = AngularDiameterDistance / 648 * Math.PI;
 
             // calculate the lookback time to the defined redshift
-            _tL = Romberg(new Integrand(AgeIntegrand), 0, _z) / _h0 * kmPerMpc;
+            LookbackTime = Romberg(new Integrand(AgeIntegrand), 0, _z) / _h0 * kmPerMpc;
         }
 
         // Calculate the inverse hyperbolic sine
