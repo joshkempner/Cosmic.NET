@@ -179,29 +179,20 @@
                             <RowDefinition />
                             <RowDefinition />
                             <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Name="InputDescription" Text="Select a file that contains a list of redshifts"
+                        <TextBlock Grid.Row="0" Grid.Column="0" Name="InputDescription" Text="Select a file that contains one redshift per line"
                                    Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
                                    TextTrimming="CharacterEllipsis" FontSize="18"
                                    HorizontalAlignment="Left" VerticalAlignment="Center"
-                                   Width="424" Margin="0,0,10,0" />
+                                   Width="404" Margin="0,0,10,0" />
                         <TextBlock Grid.Row="0" Grid.Column="0" Name="InputFilename" Text=""
                                    TextTrimming="CharacterEllipsis" FontSize="18"
                                    HorizontalAlignment="Left" VerticalAlignment="Center"
-                                   Width="424" Margin="0,0,10,0" />
-                        <Button Grid.Row="0" Grid.Column="1" Name="BrowseForInputFile" Content="Select..." Width="100" TabIndex="4" />
+                                   Width="404" Margin="0,0,10,0" />
+                        <Button Grid.Row="0" Grid.Column="1" Name="BrowseForInputFile" Content="Select a file..." Width="120" TabIndex="4" />
                         <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Height="10" Visibility="Hidden" />
-                        <TextBlock Grid.Row="2" Grid.Column="0" Name="OutputFilename" Text="Select a file for the results"
-                                   Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
-                                   HorizontalAlignment="Left" VerticalAlignment="Center"
-                                   TextTrimming="CharacterEllipsis" FontSize="18"
-                                   Width="424" Margin="0,0,10,0" />
-                        <Button Grid.Row="2" Grid.Column="1" Name="BrowseForOutputFile" Content="Select..." Width="100" TabIndex="5" />
-                        <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Height="10" Visibility="Hidden" />
-                        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
-                            <Button HorizontalAlignment="Left" Name="ComputeBatch" Content="Calculate" Width="100" TabIndex="6" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                            <Button HorizontalAlignment="Left" Name="ComputeAndSave" Content="Calculate &amp; Save" Width="150"  TabIndex="6" />
                             <TextBlock Name="SavedNotification" Text="File is saved." FontSize="18" Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"
                                        VerticalAlignment="Center" Margin="15,0" />
                         </StackPanel>

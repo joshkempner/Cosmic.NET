@@ -36,17 +36,13 @@ namespace Cosmic.NET.WPF
         public Interaction<string, Tuple<FileInfo, FileType>> GetFileToSave { get; }
 
         /// <summary>
-        /// A Command to get the input file for batch processing.
+        /// Prompt the user for the input file for batch processing.
         /// </summary>
         public ReactiveCommand<Unit, Unit> GetInputFile { get; }
         /// <summary>
-        /// A Command to get the output file for batch processing.
+        /// Prompt the user for an output file, then compute the set of redshifts in the provided batch file and write them to the output file.
         /// </summary>
-        public ReactiveCommand<Unit, Unit> GetOutputFile { get; }
-        /// <summary>
-        /// A Command to compute the set of redshifts in the provided batch file and write them to the output file.
-        /// </summary>
-        public ReactiveCommand<Unit, Unit> ComputeBatch { get; }
+        public ReactiveCommand<Unit, Unit> ComputeAndSave { get; }
 
         public MainWindowVM()
         {
@@ -55,13 +51,11 @@ namespace Cosmic.NET.WPF
             GetFileToSave = new Interaction<string, Tuple<FileInfo, FileType>>();
 
             GetInputFile = ReactiveCommand.CreateFromTask(GetTheInputFile);
-            GetOutputFile = ReactiveCommand.CreateFromTask(GetTheOutputFile);
-            ComputeBatch = ReactiveCommand.CreateFromTask(
-                                            RunBatch,
-                                            this.WhenAnyValue(
-                                                    x => x.BatchFile,
-                                                    x => x.OutputFile,
-                                                    (input, output) => (input?.Exists ?? false) && (output?.Directory?.Exists ?? false)));
+            ComputeAndSave = ReactiveCommand.CreateFromTask(
+                                                RunBatch,
+                                                this.WhenAnyValue(
+                                                        x => x.BatchFile,
+                                                        input => input?.Exists ?? false));
 
             HNought = 71;
             OmegaMatter = 0.27;
@@ -183,20 +177,15 @@ namespace Cosmic.NET.WPF
                 BatchFile = file;
         }
 
-        private async Task GetTheOutputFile()
-        {
-            var fileAndFilter = await GetFileToSave.Handle("cosmic.txt");
-            if (fileAndFilter.Item1 != null)
-            {
-                OutputFile = fileAndFilter.Item1;
-                _fileType = fileAndFilter.Item2;
-            }
-        }
-
         private async Task RunBatch()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
+                var fileAndFilter = await GetFileToSave.Handle("cosmic.txt");
+                if (fileAndFilter.Item1 == null) return;
+                OutputFile = fileAndFilter.Item1;
+                _fileType = fileAndFilter.Item2;
+
                 RunOnUiThread(() => SaveNotificationText = string.Empty);
                 // read entire input file before doing any calculations
                 var inputLines = new List<double>();
@@ -211,8 +200,8 @@ namespace Cosmic.NET.WPF
                 }
                 catch (Exception)
                 {
-                    RunOnUiThread(async () => await ParseError.Handle(
-                                                  "An error occurred reading the input file. Check the file to make sure it has one redshift per line and nothing else."));
+                    RunOnUiThread(async () => await ParseError.Handle("An error occurred reading the input file. Check the file to make sure it has one redshift per line and nothing else."));
+                    return;
                 }
 
                 // process the input redshifts one at a time, writing each to the output file as we go
@@ -233,9 +222,10 @@ namespace Cosmic.NET.WPF
                 catch (Exception)
                 {
                     RunOnUiThread(async () => await ParseError.Handle("An error occurred writing the output file."));
+                    return;
                 }
+                RunOnUiThread(() => SaveNotificationText = $"Results saved to {OutputFile.Name}");
             });
-            RunOnUiThread(() => SaveNotificationText = $"Results saved to {OutputFile.Name}");
         }
 
         /// <summary>

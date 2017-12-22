@@ -30,11 +30,9 @@ namespace Cosmic.NET.WPF
                 d(this.OneWayBind(ViewModel, vm => vm.CosmoText, v => v.SingleSourceOutput.Text));
                 d(this.Bind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputFilename.Text));
                 d(this.Bind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputFilename.ToolTip));
-                d(this.Bind(ViewModel, vm => vm.OutputFile.FullName, v => v.OutputFilename.Text));
-                d(this.Bind(ViewModel, vm => vm.OutputFile.FullName, v => v.OutputFilename.ToolTip));
+                d(this.OneWayBind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputDescription.Visibility, s => string.IsNullOrWhiteSpace(s) ? Visibility.Visible : Visibility.Hidden));
                 d(this.BindCommand(ViewModel, vm => vm.GetInputFile, v => v.BrowseForInputFile));
-                d(this.BindCommand(ViewModel, vm => vm.GetOutputFile, v => v.BrowseForOutputFile));
-                d(this.BindCommand(ViewModel, vm => vm.ComputeBatch, v => v.ComputeBatch));
+                d(this.BindCommand(ViewModel, vm => vm.ComputeAndSave, v => v.ComputeAndSave));
                 d(this.OneWayBind(ViewModel, vm => vm.SaveNotificationText, v => v.SavedNotification.Text));
                 d(this.WhenAnyValue(x => x.ViewModel.SaveNotificationText)
                       .Subscribe(
