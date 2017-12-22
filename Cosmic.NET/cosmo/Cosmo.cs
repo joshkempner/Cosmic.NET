@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -10,19 +9,17 @@ namespace Cosmo
         #region Fields
 
         // physical constants in cgs units unless otherwise specified
-        public const double c = 2.99792458e5; // speed of light
-        public const double G = 6.67259e-8;   // gravitational constant
-        public const double kmPerMpc = 3.08567758e19;
-        public const double tropicalYear = 3.1556926e7; // in seconds
+        // ReSharper disable once InconsistentNaming
+        private const double c = 2.99792458e5; // speed of light
+        private const double G = 6.67259e-8;   // gravitational constant
+        private const double KmPerMpc = 3.08567758e19;
+        private const double TropicalYear = 3.1556926e7; // in seconds
 
         // cosmological parameters
         private double _h0;      // Hubble constant at z=0
         private double _omegaM, _omegaL; // scaled densities of matter and vacuum energy
         private double _dH;      // Hubble distance
         private double _z;       // redshift of source
-
-        // delegate used for passing functions for Romberg integration
-        private delegate double Integrand(double a);
 
         #endregion
 
@@ -37,11 +34,11 @@ namespace Cosmo
             set
             {
                 if (value <= 0)
-                    throw new ArgumentOutOfRangeException("Hubble constant", "Value must be greater than 0");
+                    throw new ArgumentOutOfRangeException(nameof(H0), "Value must be greater than 0");
                 _h0 = value;
                 SetDerivedParameters();
             }
-            get { return _h0; }
+            get => _h0;
         }
 
         /// <summary>
@@ -53,11 +50,11 @@ namespace Cosmo
             set
             {
                 if (value < 0)
-                    throw new ArgumentOutOfRangeException("Normalized matter density", "Value must be at least 0");
+                    throw new ArgumentOutOfRangeException(nameof(OmegaMatter), "Value must be at least 0");
                 _omegaM = value;
                 SetDerivedParameters();
             }
-            get { return _omegaM; }
+            get => _omegaM;
         }
 
         /// <summary>
@@ -70,7 +67,7 @@ namespace Cosmo
                 _omegaL = value;
                 SetDerivedParameters();
             }
-            get { return _omegaL; }
+            get => _omegaL;
         }
 
         /// <summary>
@@ -82,10 +79,14 @@ namespace Cosmo
             private set;
         }
 
+
         /// <summary>
         /// Get the deceleration parameter.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
+#pragma warning disable IDE1006 // Naming Styles
         public double q0
+#pragma warning restore IDE1006 // Naming Styles
         {
             get;
             private set;
@@ -100,11 +101,11 @@ namespace Cosmo
             set
             {
                 if (value < 0)
-                    throw new ArgumentOutOfRangeException("Redshift", "Value must be at least 0");
+                    throw new ArgumentOutOfRangeException(nameof(Redshift), "Value must be at least 0");
                 _z = value;
                 SetDistances();
             }
-            get { return _z; }
+            get => _z;
         }
 
         /// <summary>
@@ -210,20 +211,11 @@ namespace Cosmo
         /// <summary>
         /// Formats the cosmological parameters on a single line
         /// </summary>
-        /// <returns>string without a line terminator at the end</returns>
-        public string FormattedParameters()
-        {
-            return FormattedParameters("");
-        }
-
-        /// <summary>
-        /// Formats the cosmological parameters on a single line
-        /// </summary>
         /// <param name="leader">string to be pre-pended to the line</param>
         /// <returns>string without a line terminator at the end</returns>
-        public string FormattedParameters(string leader)
+        public string FormattedParameters(string leader = "")
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendFormat("{0}H_0 = {1}, Omega_m = {2}, Omega_L = {3}", leader, H0, OmegaMatter, OmegaLambda);
             if (Math.Abs(OmegaKappa) > double.Epsilon)
                 sb.AppendFormat(", Omega_k = {0}", OmegaKappa);
@@ -239,10 +231,10 @@ namespace Cosmo
         /// <returns>string without a line terminator at the end</returns>
         public string ShortFormHeader(string leader, string separator)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(FormattedParameters(leader));
             sb.AppendFormat("{0}z{1}age{1}t_L{1}d_A{1}d_L{1}d_C{1}", leader, separator);
-            if (ComovingDistance != TransverseDistance)
+            if (Math.Abs(ComovingDistance - TransverseDistance) > 1e-5)
                 sb.AppendFormat("d_T{0}", separator);
             sb.AppendFormat("V_C{0}rho_crit{0}kpc/\"{0}\"/kpc", separator);
             return sb.ToString();
@@ -255,13 +247,13 @@ namespace Cosmo
         /// <returns>string without a line terminator at the end</returns>
         public string ShortFormOutput(string separator)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendFormat("{1:f2}{0}{2:f6}{0}{3:f6}{0}{4:f6}{0}{5:f6}{0}{6:f6}{0}",
-                separator, Redshift, (Age - LookbackTime) / (tropicalYear * 1e9), LookbackTime / (tropicalYear * 1e9), AngularDiameterDistance, LuminosityDistance, ComovingDistance);
-            if (ComovingDistance != TransverseDistance)
+                separator, Redshift, (Age - LookbackTime) / (TropicalYear * 1e9), LookbackTime / (TropicalYear * 1e9), AngularDiameterDistance, LuminosityDistance, ComovingDistance);
+            if (Math.Abs(ComovingDistance - TransverseDistance) > 1e-5)
                 sb.AppendFormat("{1:f6}{0}", separator, TransverseDistance);
             sb.AppendFormat("{1:f6}{0}{2:e4}{0}{3:f6}{0}{4:f6}",
-                separator, ComovingVolume, CriticalDensity, KpcPerArcsec, 1/KpcPerArcsec);
+                separator, ComovingVolume, CriticalDensity, KpcPerArcsec, 1 / KpcPerArcsec);
             return sb.ToString();
         }
 
@@ -272,7 +264,7 @@ namespace Cosmo
         /// <returns>string without a line terminator at the end</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             // get the cosmological parameters
             sb.AppendLine(FormattedParameters());
@@ -280,9 +272,9 @@ namespace Cosmo
             // get the quantities derived from the redshift
             sb.AppendFormat("At z = {0}", Redshift);
             sb.AppendLine();
-            sb.AppendFormat("  age of the Universe at z      = {0:f6} Gyr", (Age - LookbackTime) / (tropicalYear * 1e9));
+            sb.AppendFormat("  age of the Universe at z      = {0:f6} Gyr", (Age - LookbackTime) / (TropicalYear * 1e9));
             sb.AppendLine();
-            sb.AppendFormat("  lookback time to z            = {0:f6} Gyr", LookbackTime / (tropicalYear * 1e9));
+            sb.AppendFormat("  lookback time to z            = {0:f6} Gyr", LookbackTime / (TropicalYear * 1e9));
             sb.AppendLine();
             sb.AppendFormat("  angular diameter distance d_A = {0:f6} Mpc", AngularDiameterDistance);
             sb.AppendLine();
@@ -290,7 +282,7 @@ namespace Cosmo
             sb.AppendLine();
             sb.AppendFormat("  comoving radial distance d_C  = {0:f6} Mpc", ComovingDistance);
             sb.AppendLine();
-            if (ComovingDistance != TransverseDistance)
+            if (Math.Abs(ComovingDistance - TransverseDistance) > 1e-5)
             {
                 sb.AppendFormat("  comoving transverse distance  = {0:f6} Mpc", TransverseDistance);
                 sb.AppendLine();
@@ -333,7 +325,7 @@ namespace Cosmo
             // other derived quantities
             q0 = 0.5 * _omegaM - _omegaL;
             _dH = c / _h0;
-            Age = Romberg(new Integrand(AgeIntegrand), 0, 1000) / _h0 * kmPerMpc;
+            Age = Romberg(AgeIntegrand, 0, 1000) / _h0 * KmPerMpc;
 
             // initialize the redshift if needed, and always set the distance measures
             if (_z < 0)
@@ -357,56 +349,58 @@ namespace Cosmo
         // The function that gets integrated to determine the age of the Universe
         private double AgeIntegrand(double z)
         {
-            return 1.0 / (1+z) / E(z);
+            return 1.0 / (1 + z) / E(z);
         }
 
         // Romberg integration using first argument as the integrand
-        private double Romberg(Integrand integrand, double a, double b)
+        private static double Romberg(Func<double, double> integrand, double a, double b)
         {
-            double h = b - a;   // coarsest panel size
+            var h = b - a;   // coarsest panel size
             double dR;          // convergence
             double np = 1;      // current number of panels
-            const int N = 25;   // maximum iterations
-            double prec = 1e-8; // desired precision
-            double[] R = new double[N * N];
+            const int n = 25;   // maximum iterations
+            const double prec = 1e-8; // desired precision
+            var r = new double[n * n];
 
             // compute the first term, R(0,0)
-            R[0] = h / 2 * (integrand(a) + integrand(b));
+            r[0] = h / 2 * (integrand(a) + integrand(b));
 
             // loop over the desired number of rows, i = 2,...,N
-            int i, j, k;
-            for (i = 1; i < N; i++)
+            for (var i = 1; i < n; i++)
             {
                 h /= 2.0;
                 np *= 2;
-                double sumT = 0.0;
-                for(k = 1; k <= np-1; k += 2)
-                    sumT += integrand(a + k*h);
-        
+                var sumT = 0.0;
+                int k;
+                for (k = 1; k <= np - 1; k += 2)
+                    sumT += integrand(a + k * h);
+
                 // Compute Romberg table entries R(i,1), R(i,2), ..., R(i,i)
-                R[N*i] = 0.5 * R[N*(i-1)] + h * sumT;   
-                int m = 1;
-                for(j = 1; j < i; j++)
+                r[n * i] = 0.5 * r[n * (i - 1)] + h * sumT;
+                var m = 1;
+                int j;
+                for (j = 1; j < i; j++)
                 {
                     m *= 4;
-                    R[N*i+j] = R[N*i+j-1] + (R[N*i+j-1] - R[N*(i-1)+j-1]) / (m-1);
+                    r[n * i + j] = r[n * i + j - 1] + (r[n * i + j - 1] - r[n * (i - 1) + j - 1]) / (m - 1);
                 }
-                dR = (j > 1) ? R[N*i+j-1] - R[N*(i-1)+(j-2)] : R[0];
+                dR = j > 1 ? r[n * i + j - 1] - r[n * (i - 1) + (j - 2)] : r[0];
                 if (Math.Abs(dR) < prec)
-                    return R[N*i+j-1];
+                    return r[n * i + j - 1];
             }
-            return R.Last();
+            return r.Last();
         }
 
         // Calculate distance measures and other quantities that are redshift-dependent
         private void SetDistances()
         {
+            var onePlusZ = 1 + _z;
             // calculate critical density
-            CriticalDensity = 3.0 / (8.0 * Math.PI) * Math.Pow(_h0 / kmPerMpc, 2) / G *
-                (_omegaL + Math.Pow(1 + _z, 3) * _omegaM);
-            
+            CriticalDensity = 3.0 / (8.0 * Math.PI) * Math.Pow(_h0 / KmPerMpc, 2) / G *
+                (_omegaL + Math.Pow(onePlusZ, 3) * _omegaM);
+
             // everything else is simple if the redshift is zero
-            if (_z == 0)
+            if (Math.Abs(_z) < 1e-5)
             {
                 ComovingDistance = TransverseDistance = ComovingVolume = AngularDiameterDistance = LuminosityDistance = LookbackTime = 0;
                 KpcPerArcsec = 0;
@@ -414,8 +408,8 @@ namespace Cosmo
             }
 
             // calculate the line-of-sight comoving distance using Romberg integration
-            ComovingDistance = _dH * Romberg(new Integrand(InverseOfE), 0, _z);
-            
+            ComovingDistance = _dH * Romberg(InverseOfE, 0, _z);
+
             // calculate the comoving transverse distance and comoving volume from the comoving
             // line-of-sight distance
             if (OmegaKappa > 0)
@@ -439,20 +433,20 @@ namespace Cosmo
             }
 
             // calculate angular diameter distance and luminosity distance from the comoving transverse distance
-            AngularDiameterDistance = TransverseDistance / (1 + _z);
-            LuminosityDistance = TransverseDistance * (1 + _z);
+            AngularDiameterDistance = TransverseDistance / onePlusZ;
+            LuminosityDistance = TransverseDistance * onePlusZ;
 
             // calculate an angular scale in kpc/arcsec from the angular diameter distance
             KpcPerArcsec = AngularDiameterDistance / 648 * Math.PI;
 
             // calculate the lookback time to the defined redshift
-            LookbackTime = Romberg(new Integrand(AgeIntegrand), 0, _z) / _h0 * kmPerMpc;
+            LookbackTime = Romberg(AgeIntegrand, 0, _z) / _h0 * KmPerMpc;
         }
 
         // Calculate the inverse hyperbolic sine
-        private double Asinh(double p)
+        private static double Asinh(double p)
         {
-            return Math.Log(p + Math.Sqrt(1 + p*p));
+            return Math.Log(p + Math.Sqrt(1 + p * p));
         }
 
         #endregion
@@ -476,16 +470,6 @@ namespace Cosmo
         public Cosmology(double h0, double omegaM, double omegaL)
         {
             Init(h0, omegaM, omegaL);
-        }
-        
-        /// <summary>
-        /// Copy constructor
-        /// </summary>
-        /// <param name="cosmology">cosmology to copy from</param>
-        public Cosmology(Cosmology cosmology)
-        {
-            Init(cosmology.H0, cosmology.OmegaMatter, cosmology.OmegaLambda);
-            Redshift = cosmology.Redshift;
         }
 
         #endregion
