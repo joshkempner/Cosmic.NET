@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+*.suo
+/Cosmic.NET/.vs/Cosmic.NET/v15/Server/sqlite3
+/Cosmic.NET/Cosmic.NET/obj/Debug
+/Cosmic.NET/Cosmic.NET.WPF/bin/Debug
+/Cosmic.NET/Cosmic.NET.WPF/obj/Debug
+/Cosmic.NET/Cosmic.NET/bin/Debug
+/Cosmic.NET/cosmo/bin/Debug
+/Cosmic.NET/cosmo/obj/Debug
+/Cosmic.NET/packages
+*.user

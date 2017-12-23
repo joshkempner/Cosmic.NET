@@ -306,9 +306,11 @@ namespace Cosmic.NET
         private void OpenFromBrowseButton_Click(object sender, EventArgs e)
         {
             // create and set up open file dialog
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.DefaultExt = ".txt";
-            dlg.Filter = "Text documents (.txt)|*.txt|All files|*.*";
+            OpenFileDialog dlg = new OpenFileDialog
+            {
+                DefaultExt = ".txt",
+                Filter = @"Text documents (.txt)|*.txt|All files|*.*"
+            };
 
             // show open file dialog and process results
             if (dlg.ShowDialog() == DialogResult.OK)
@@ -324,9 +326,11 @@ namespace Cosmic.NET
         private void SaveToBrowseButton_Click(object sender, EventArgs e)
         {
             // create and set up open file dialog
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.DefaultExt = ".txt";
-            dlg.Filter = "Text document (.txt)|*.txt|CSV document (.csv)|*.csv";
+            SaveFileDialog dlg = new SaveFileDialog
+            {
+                DefaultExt = ".txt",
+                Filter = @"Text document (.txt)|*.txt|CSV document (.csv)|*.csv"
+            };
 
             // show open file dialog and process results
             if (dlg.ShowDialog() == DialogResult.OK)
@@ -387,11 +391,11 @@ namespace Cosmic.NET
                     string separator = saveToFilterIndex == 1 ? "\t" : ",";
                     using (StreamWriter sw = new StreamWriter(outfile))
                     {
-                        sw.WriteLine(cosmology.ShortFormHeader("# ", separator));
+                        sw.WriteLine(cosmology.GetShortFormHeader("# ", separator));
                         foreach (double redshift in inputLines)
                         {
                             cosmology.Redshift = redshift;
-                            sw.WriteLine(cosmology.ShortFormOutput(separator));
+                            sw.WriteLine(cosmology.GetShortFormOutput(separator));
                         }
                     }
                 }
