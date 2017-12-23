@@ -391,11 +391,11 @@ namespace Cosmic.NET
                     string separator = saveToFilterIndex == 1 ? "\t" : ",";
                     using (StreamWriter sw = new StreamWriter(outfile))
                     {
-                        sw.WriteLine(cosmology.ShortFormHeader("# ", separator));
+                        sw.WriteLine(cosmology.GetShortFormHeader("# ", separator));
                         foreach (double redshift in inputLines)
                         {
                             cosmology.Redshift = redshift;
-                            sw.WriteLine(cosmology.ShortFormOutput(separator));
+                            sw.WriteLine(cosmology.GetShortFormOutput(separator));
                         }
                     }
                 }

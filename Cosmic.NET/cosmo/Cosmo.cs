@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using ReactiveUI;
 
 namespace Cosmo
 {
-    public class Cosmology
+    public class Cosmology : ReactiveObject
     {
         #region Fields
 
@@ -31,14 +32,13 @@ namespace Cosmo
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value set is &lt;= 0</exception>
         public double H0
         {
+            get => _h0;
             set
             {
                 if (value <= 0)
                     throw new ArgumentOutOfRangeException(nameof(H0), "Value must be greater than 0");
-                _h0 = value;
-                SetDerivedParameters();
+                this.RaiseAndSetIfChanged(ref _h0, value);
             }
-            get => _h0;
         }
 
         /// <summary>
@@ -47,14 +47,13 @@ namespace Cosmo
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value set is &lt; 0</exception>
         public double OmegaMatter
         {
+            get => _omegaM;
             set
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(OmegaMatter), "Value must be at least 0");
-                _omegaM = value;
-                SetDerivedParameters();
+                this.RaiseAndSetIfChanged(ref _omegaM, value);
             }
-            get => _omegaM;
         }
 
         /// <summary>
@@ -62,12 +61,8 @@ namespace Cosmo
         /// </summary>
         public double OmegaLambda
         {
-            set
-            {
-                _omegaL = value;
-                SetDerivedParameters();
-            }
             get => _omegaL;
+            set => this.RaiseAndSetIfChanged(ref _omegaL, value);
         }
 
         /// <summary>
@@ -98,14 +93,13 @@ namespace Cosmo
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value set is &lt; 0</exception>
         public double Redshift
         {
+            get => _z;
             set
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(Redshift), "Value must be at least 0");
-                _z = value;
-                SetDistances();
+                this.RaiseAndSetIfChanged(ref _z, value);
             }
-            get => _z;
         }
 
         /// <summary>
@@ -192,28 +186,12 @@ namespace Cosmo
         #endregion
 
         #region Public Methods
-
-        /// <summary>
-        /// Changes the fundamental parameters of the cosmology.
-        /// Also changes the distance measures if the redshift is non-zero.
-        /// </summary>
-        /// <param name="h0">Hubble constant</param>
-        /// <param name="omegaM">Omega-matter</param>
-        /// <param name="omegaL">Omega-Lambda</param>
-        public void SetCosmology(double h0, double omegaM, double omegaL)
-        {
-            H0 = h0;
-            OmegaMatter = omegaM;
-            OmegaLambda = omegaL;
-            SetDerivedParameters();
-        }
-
         /// <summary>
         /// Formats the cosmological parameters on a single line
         /// </summary>
         /// <param name="leader">string to be pre-pended to the line</param>
         /// <returns>string without a line terminator at the end</returns>
-        public string FormattedParameters(string leader = "")
+        public string GetFormattedParameters(string leader = "")
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0}H_0 = {1}, Omega_m = {2}, Omega_L = {3}", leader, H0, OmegaMatter, OmegaLambda);
@@ -229,10 +207,10 @@ namespace Cosmo
         /// <param name="leader">String the line starts with to mark it as a header line</param>
         /// <param name="separator">Column separator</param>
         /// <returns>string without a line terminator at the end</returns>
-        public string ShortFormHeader(string leader, string separator)
+        public string GetShortFormHeader(string leader, string separator)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(FormattedParameters(leader));
+            sb.AppendLine(GetFormattedParameters(leader));
             sb.AppendFormat("{0}z{1}age{1}t_L{1}d_A{1}d_L{1}d_C{1}", leader, separator);
             if (Math.Abs(ComovingDistance - TransverseDistance) > 1e-5)
                 sb.AppendFormat("d_T{0}", separator);
@@ -245,7 +223,7 @@ namespace Cosmo
         /// </summary>
         /// <param name="separator">column separator</param>
         /// <returns>string without a line terminator at the end</returns>
-        public string ShortFormOutput(string separator)
+        public string GetShortFormOutput(string separator)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{1:f2}{0}{2:f6}{0}{3:f6}{0}{4:f6}{0}{5:f6}{0}{6:f6}{0}",
@@ -267,7 +245,7 @@ namespace Cosmo
             var sb = new StringBuilder();
 
             // get the cosmological parameters
-            sb.AppendLine(FormattedParameters());
+            sb.AppendLine(GetFormattedParameters());
 
             // get the quantities derived from the redshift
             sb.AppendFormat("At z = {0}", Redshift);
@@ -302,18 +280,6 @@ namespace Cosmo
 
         #region Private Methods
 
-        // Initialize the cosmology
-        private void Init(double h0, double omegaM, double omegaL)
-        {
-            // initialize the fundamental cosmological parameters
-            _h0 = h0;
-            _omegaM = omegaM;
-            _omegaL = omegaL;
-
-            // initialize the derived parameters
-            SetDerivedParameters();
-        }
-
         // Set the cosmological parameters derived from the normalized densities
         private void SetDerivedParameters()
         {
@@ -326,11 +292,6 @@ namespace Cosmo
             q0 = 0.5 * _omegaM - _omegaL;
             _dH = c / _h0;
             Age = Romberg(AgeIntegrand, 0, 1000) / _h0 * KmPerMpc;
-
-            // initialize the redshift if needed, and always set the distance measures
-            if (_z < 0)
-                Redshift = 0; // use Property so distance measures get set
-            SetDistances();
         }
 
         // Calculate the expansion factor at a given redshift
@@ -441,6 +402,7 @@ namespace Cosmo
 
             // calculate the lookback time to the defined redshift
             LookbackTime = Romberg(AgeIntegrand, 0, _z) / _h0 * KmPerMpc;
+            Console.WriteLine(ToString());
         }
 
         // Calculate the inverse hyperbolic sine
@@ -451,15 +413,14 @@ namespace Cosmo
 
         #endregion
 
-        #region Constructors, Dispose
+        #region Constructors
 
         /// <summary>
         /// Default constructor. Uses initial WMAP results for cosmology
         /// </summary>
         public Cosmology()
-        {
-            Init(71.0, 0.27, 0.73);
-        }
+            : this(71.0, 0.27, 0.73)
+        { }
 
         /// <summary>
         /// Constructor with user-specified cosmological parameters
@@ -469,7 +430,23 @@ namespace Cosmo
         /// <param name="omegaL">Omega-Lambda</param>
         public Cosmology(double h0, double omegaM, double omegaL)
         {
-            Init(h0, omegaM, omegaL);
+            H0 = h0;
+            OmegaMatter = omegaM;
+            OmegaLambda = omegaL;
+            Redshift = 0;
+
+            this.WhenAnyValue(
+                    x => x.H0,
+                    x => x.OmegaMatter,
+                    x => x.OmegaLambda)
+                .Subscribe(_ =>
+                {
+                    SetDerivedParameters();
+                    SetDistances();
+                });
+
+            this.WhenAnyValue(x => x.Redshift)
+                .Subscribe(_ => SetDistances());
         }
 
         #endregion

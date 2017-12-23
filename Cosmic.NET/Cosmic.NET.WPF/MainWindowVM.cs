@@ -211,11 +211,11 @@ namespace Cosmic.NET.WPF
                     var separator = _fileType == FileType.Txt ? "\t" : ",";
                     using (var sw = new StreamWriter(OutputFile.FullName))
                     {
-                        sw.WriteLine(cosmology.ShortFormHeader("# ", separator));
+                        sw.WriteLine(cosmology.GetShortFormHeader("# ", separator));
                         foreach (var redshift in inputLines)
                         {
                             cosmology.Redshift = redshift;
-                            sw.WriteLine(cosmology.ShortFormOutput(separator));
+                            sw.WriteLine(cosmology.GetShortFormOutput(separator));
                         }
                     }
                 }
