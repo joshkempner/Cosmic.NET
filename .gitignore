@@ -12,3 +12,4 @@
 /Cosmic.NET/cosmo/obj
 /Cosmic.NET/packages
 *.user
+*.dtbcache

@@ -62,17 +62,10 @@ namespace Cosmic.NET.WPF
             OmegaLambda = 0.73;
             Redshift = 0.1;
 
-            this.WhenAnyValue(x => x.HNought)
-                .Subscribe(h => HNoughtText = h.ToString(CultureInfo.InvariantCulture));
-
-            this.WhenAnyValue(x => x.OmegaMatter)
-                .Subscribe(om => OmegaMatterText = om.ToString(CultureInfo.InvariantCulture));
-
-            this.WhenAnyValue(x => x.OmegaLambda)
-                .Subscribe(ol => OmegaLambdaText = ol.ToString(CultureInfo.InvariantCulture));
-
-            this.WhenAnyValue(x => x.Redshift)
-                .Subscribe(z => RedshiftText = z.ToString(CultureInfo.InvariantCulture));
+            HNoughtText = HNought.ToString(CultureInfo.InvariantCulture);
+            OmegaMatterText = OmegaMatter.ToString(CultureInfo.InvariantCulture);
+            OmegaLambdaText = OmegaLambda.ToString(CultureInfo.InvariantCulture);
+            RedshiftText = Redshift.ToString(CultureInfo.InvariantCulture);
 
             this.WhenAnyValue(x => x.HNoughtText)
                 .Throttle(TimeSpan.FromSeconds(ThrottleDelay))
