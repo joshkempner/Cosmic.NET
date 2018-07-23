@@ -108,14 +108,14 @@ namespace Cosmic.NET.WPF
 
         public MainWindowVM ViewModel
         {
-            get { return (MainWindowVM)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (MainWindowVM)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (MainWindowVM)value; }
+            get => ViewModel;
+            set => ViewModel = (MainWindowVM)value;
         }
 
         #endregion

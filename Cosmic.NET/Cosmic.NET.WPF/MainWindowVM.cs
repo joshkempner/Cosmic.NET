@@ -61,7 +61,6 @@ namespace Cosmic.NET.WPF
             OmegaMatter = 0.27;
             OmegaLambda = 0.73;
             Redshift = 0.1;
-
             HNoughtText = HNought.ToString(CultureInfo.InvariantCulture);
             OmegaMatterText = OmegaMatter.ToString(CultureInfo.InvariantCulture);
             OmegaLambdaText = OmegaLambda.ToString(CultureInfo.InvariantCulture);
@@ -226,8 +225,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public string HNoughtText
         {
-            get { return _hNoughtText; }
-            set { this.RaiseAndSetIfChanged(ref _hNoughtText, value); }
+            get => _hNoughtText;
+            set => this.RaiseAndSetIfChanged(ref _hNoughtText, value);
         }
         private string _hNoughtText;
 
@@ -236,8 +235,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public double HNought
         {
-            get { return _hNought; }
-            set { this.RaiseAndSetIfChanged(ref _hNought, value); }
+            get => _hNought;
+            set => this.RaiseAndSetIfChanged(ref _hNought, value);
         }
         private double _hNought;
 
@@ -246,8 +245,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public string OmegaMatterText
         {
-            get { return _omegaMatterText; }
-            set { this.RaiseAndSetIfChanged(ref _omegaMatterText, value); }
+            get => _omegaMatterText;
+            set => this.RaiseAndSetIfChanged(ref _omegaMatterText, value);
         }
         private string _omegaMatterText;
 
@@ -256,8 +255,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public double OmegaMatter
         {
-            get { return _omegaMatter; }
-            set { this.RaiseAndSetIfChanged(ref _omegaMatter, value); }
+            get => _omegaMatter;
+            set => this.RaiseAndSetIfChanged(ref _omegaMatter, value);
         }
         private double _omegaMatter;
 
@@ -266,8 +265,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public string OmegaLambdaText
         {
-            get { return _omegaLambdaText; }
-            set { this.RaiseAndSetIfChanged(ref _omegaLambdaText, value); }
+            get => _omegaLambdaText;
+            set => this.RaiseAndSetIfChanged(ref _omegaLambdaText, value);
         }
         private string _omegaLambdaText;
 
@@ -276,8 +275,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public double OmegaLambda
         {
-            get { return _omegaLambda; }
-            set { this.RaiseAndSetIfChanged(ref _omegaLambda, value); }
+            get => _omegaLambda;
+            set => this.RaiseAndSetIfChanged(ref _omegaLambda, value);
         }
         private double _omegaLambda;
 
@@ -286,8 +285,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public string RedshiftText
         {
-            get { return _redshiftText; }
-            set { this.RaiseAndSetIfChanged(ref _redshiftText, value); }
+            get => _redshiftText;
+            set => this.RaiseAndSetIfChanged(ref _redshiftText, value);
         }
         private string _redshiftText;
 
@@ -296,8 +295,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public double Redshift
         {
-            get { return _redshift; }
-            set { this.RaiseAndSetIfChanged(ref _redshift, value); }
+            get => _redshift;
+            set => this.RaiseAndSetIfChanged(ref _redshift, value);
         }
         private double _redshift;
 
@@ -312,8 +311,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public FileInfo BatchFile
         {
-            get { return _batchFile; }
-            set { this.RaiseAndSetIfChanged(ref _batchFile, value); }
+            get => _batchFile;
+            set => this.RaiseAndSetIfChanged(ref _batchFile, value);
         }
         private FileInfo _batchFile;
 
@@ -322,8 +321,8 @@ namespace Cosmic.NET.WPF
         /// </summary>
         public FileInfo OutputFile
         {
-            get { return _outputFile; }
-            set { this.RaiseAndSetIfChanged(ref _outputFile, value); }
+            get => _outputFile;
+            set => this.RaiseAndSetIfChanged(ref _outputFile, value);
         }
         private FileInfo _outputFile;
 
@@ -331,8 +330,8 @@ namespace Cosmic.NET.WPF
 
         public string SaveNotificationText
         {
-            get { return _saveNotificationText; }
-            set { this.RaiseAndSetIfChanged(ref _saveNotificationText, value); }
+            get => _saveNotificationText;
+            set => this.RaiseAndSetIfChanged(ref _saveNotificationText, value);
         }
         private string _saveNotificationText;
 
