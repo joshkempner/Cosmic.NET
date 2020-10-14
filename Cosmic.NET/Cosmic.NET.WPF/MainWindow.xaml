@@ -9,7 +9,7 @@
         Style="{DynamicResource MainWindowStyle}"
         Title="Cosmology Calculator"
         Height="500" MinHeight="500" MinWidth="730" SizeToContent="WidthAndHeight"
-        Icon="wedge.png">
+        Icon="Resources/wedge.png">
     <Window.Resources>
         <SolidColorBrush x:Key="SectionColor" Color="MidnightBlue"/>
         <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
