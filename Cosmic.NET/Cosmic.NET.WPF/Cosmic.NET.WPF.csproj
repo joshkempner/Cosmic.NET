@@ -18,8 +18,8 @@
     <ProjectReference Include="..\cosmo\Cosmo.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="reactiveui" Version="11.5.35" />
-    <PackageReference Include="ReactiveUI.WPF" Version="11.5.35" />
+    <PackageReference Include="reactiveui" Version="12.1.5" />
+    <PackageReference Include="ReactiveUI.WPF" Version="12.1.5" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\CloseWindow.png" />
