@@ -173,10 +173,10 @@ namespace Cosmic.NET.WPF
         {
             await Task.Run(async () =>
             {
-                var fileAndFilter = await GetFileToSave.Handle("cosmic.txt");
-                if (fileAndFilter.Item1 == null) return;
-                OutputFile = fileAndFilter.Item1;
-                _fileType = fileAndFilter.Item2;
+                var (outputFile, fileType) = await GetFileToSave.Handle("cosmic.txt");
+                if (outputFile == null) return;
+                OutputFile = outputFile;
+                _fileType = fileType;
 
                 RunOnUiThread(() => SaveNotificationText = string.Empty);
                 // read entire input file before doing any calculations
