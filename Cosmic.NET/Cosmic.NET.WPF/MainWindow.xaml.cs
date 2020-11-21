@@ -40,8 +40,8 @@ namespace Cosmic.NET.WPF
                           {
                               if (string.IsNullOrEmpty(text)) return;
                               var sb = new Storyboard();
-                              Storyboard.SetTargetProperty(_fadeOutAnimation, new PropertyPath(OpacityProperty));
-                              sb.Children.Add(_fadeOutAnimation);
+                              Storyboard.SetTargetProperty(FadeOutAnimation, new PropertyPath(OpacityProperty));
+                              sb.Children.Add(FadeOutAnimation);
                               sb.Begin(SavedNotification);
                           }));
                 d(ViewModel
@@ -87,7 +87,7 @@ namespace Cosmic.NET.WPF
             SourceInitialized += CoreHostView_SourceInitialized;
         }
 
-        private static DoubleAnimationUsingKeyFrames _fadeOutAnimation = new DoubleAnimationUsingKeyFrames
+        private static readonly DoubleAnimationUsingKeyFrames FadeOutAnimation = new DoubleAnimationUsingKeyFrames
         {
             KeyFrames = new DoubleKeyFrameCollection
             {
@@ -321,7 +321,7 @@ namespace Cosmic.NET.WPF
                 return this == (Rect)obj;
             }
 
-            /// <summary>Return the HashCode for this struct (not garanteed to be unique)</summary>
+            /// <summary>Return the HashCode for this struct (not guaranteed to be unique)</summary>
             public override int GetHashCode()
             {
                 return left.GetHashCode() + top.GetHashCode() + right.GetHashCode() + bottom.GetHashCode();

@@ -183,12 +183,10 @@ namespace Cosmic.NET.WPF
                 var inputLines = new List<double>();
                 try
                 {
-                    using (var sr = new StreamReader(BatchFile.FullName))
-                    {
-                        string line;
-                        while ((line = sr.ReadLine()) != null)
-                            inputLines.Add(double.Parse(line));
-                    }
+                    using var sr = new StreamReader(BatchFile.FullName);
+                    string line;
+                    while ((line = await sr.ReadLineAsync()) != null)
+                        inputLines.Add(double.Parse(line));
                 }
                 catch (Exception)
                 {
@@ -201,14 +199,12 @@ namespace Cosmic.NET.WPF
                 {
                     var cosmology = new Cosmology(HNought, OmegaMatter, OmegaLambda);
                     var separator = _fileType == FileType.Txt ? "\t" : ",";
-                    using (var sw = new StreamWriter(OutputFile.FullName))
+                    await using var sw = new StreamWriter(OutputFile.FullName);
+                    await sw.WriteLineAsync(cosmology.GetShortFormHeader("# ", separator));
+                    foreach (var redshift in inputLines)
                     {
-                        sw.WriteLine(cosmology.GetShortFormHeader("# ", separator));
-                        foreach (var redshift in inputLines)
-                        {
-                            cosmology.Redshift = redshift;
-                            sw.WriteLine(cosmology.GetShortFormOutput(separator));
-                        }
+                        cosmology.Redshift = redshift;
+                        await sw.WriteLineAsync(cosmology.GetShortFormOutput(separator));
                     }
                 }
                 catch (Exception)
@@ -233,7 +229,7 @@ namespace Cosmic.NET.WPF
         /// <summary>
         /// Gets or sets the current value of the Hubble constant.
         /// </summary>
-        public double HNought
+        private double HNought
         {
             get => _hNought;
             set => this.RaiseAndSetIfChanged(ref _hNought, value);
@@ -253,7 +249,7 @@ namespace Cosmic.NET.WPF
         /// <summary>
         /// Gets or sets the current value of the density attributed to matter.
         /// </summary>
-        public double OmegaMatter
+        private double OmegaMatter
         {
             get => _omegaMatter;
             set => this.RaiseAndSetIfChanged(ref _omegaMatter, value);
@@ -273,7 +269,7 @@ namespace Cosmic.NET.WPF
         /// <summary>
         /// Gets or sets the current value of the density attributed to the cosmological constant.
         /// </summary>
-        public double OmegaLambda
+        private double OmegaLambda
         {
             get => _omegaLambda;
             set => this.RaiseAndSetIfChanged(ref _omegaLambda, value);
@@ -293,7 +289,7 @@ namespace Cosmic.NET.WPF
         /// <summary>
         /// Gets or sets the current single redshift.
         /// </summary>
-        public double Redshift
+        private double Redshift
         {
             get => _redshift;
             set => this.RaiseAndSetIfChanged(ref _redshift, value);
@@ -312,14 +308,14 @@ namespace Cosmic.NET.WPF
         public FileInfo BatchFile
         {
             get => _batchFile;
-            set => this.RaiseAndSetIfChanged(ref _batchFile, value);
+            private set => this.RaiseAndSetIfChanged(ref _batchFile, value);
         }
         private FileInfo _batchFile;
 
         /// <summary>
         /// Gets or sets the full path to the output file for batch mode.
         /// </summary>
-        public FileInfo OutputFile
+        private FileInfo OutputFile
         {
             get => _outputFile;
             set => this.RaiseAndSetIfChanged(ref _outputFile, value);
@@ -331,7 +327,7 @@ namespace Cosmic.NET.WPF
         public string SaveNotificationText
         {
             get => _saveNotificationText;
-            set => this.RaiseAndSetIfChanged(ref _saveNotificationText, value);
+            private set => this.RaiseAndSetIfChanged(ref _saveNotificationText, value);
         }
         private string _saveNotificationText;
 
@@ -352,15 +348,15 @@ namespace Cosmic.NET.WPF
             RunOnUiThread(_ => action());
         }
 
-        private static void RunOnUiThread(Action<object> action, object parm = null)
+        private static void RunOnUiThread(Action<object> action, object param = null)
         {
             if (System.Windows.Application.Current?.Dispatcher.CheckAccess() ?? false)
             {
-                action(parm); // we're on the ui thread, just go for it
+                action(param); // we're on the ui thread, just go for it
                 return;
             }
             if (System.Windows.Application.Current != null)
-                System.Windows.Application.Current.Dispatcher.Invoke(action, parm);
+                System.Windows.Application.Current.Dispatcher.Invoke(action, param);
             else
                 throw new InvalidOperationException("Unable to run on UI thread!");
         }
