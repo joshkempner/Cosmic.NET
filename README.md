@@ -7,3 +7,5 @@ There are two versions:
 2. A newer WPF UI.
 
 In addition, the "cosmo" library is designed to be used as a library by any .NET app.
+
+Contributions via pull requests are welcome.
