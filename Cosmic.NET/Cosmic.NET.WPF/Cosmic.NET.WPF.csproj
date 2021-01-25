@@ -19,7 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="reactiveui" Version="13.1.1" />
-    <PackageReference Include="ReactiveUI.WPF" Version="13.0.38" />
+    <PackageReference Include="ReactiveUI.WPF" Version="13.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\CloseWindow.png" />
