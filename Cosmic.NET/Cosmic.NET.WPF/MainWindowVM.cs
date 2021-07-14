@@ -5,6 +5,7 @@ using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Cosmo;
 using ReactiveUI;
 using ReactiveCommand = ReactiveUI.ReactiveCommand;
@@ -36,6 +37,10 @@ namespace Cosmic.NET.WPF
         public Interaction<string, Tuple<FileInfo, FileType>> GetFileToSave { get; }
 
         /// <summary>
+        /// Copy the single-redshift output to the clipboard.
+        /// </summary>
+        public ReactiveCommand<Unit, Unit> CopyOutputToClipboard { get; }
+        /// <summary>
         /// Prompt the user for the input file for batch processing.
         /// </summary>
         public ReactiveCommand<Unit, Unit> GetInputFile { get; }
@@ -50,6 +55,9 @@ namespace Cosmic.NET.WPF
             GetFileToOpen = new Interaction<string, FileInfo>();
             GetFileToSave = new Interaction<string, Tuple<FileInfo, FileType>>();
 
+            CopyOutputToClipboard = ReactiveCommand.CreateFromTask(
+                                                CopyOutput,
+                                                this.WhenAnyValue(x => x.CosmoText, t => !string.IsNullOrEmpty(t)));
             GetInputFile = ReactiveCommand.CreateFromTask(GetTheInputFile);
             ComputeAndSave = ReactiveCommand.CreateFromTask(
                                                 RunBatch,
@@ -160,6 +168,11 @@ namespace Cosmic.NET.WPF
                     })
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToProperty(this, x => x.CosmoText, out _cosmoText);
+        }
+
+        private async Task CopyOutput()
+        {
+            await Task.Run(() => Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(CosmoText)));
         }
 
         private async Task GetTheInputFile()
@@ -300,7 +313,7 @@ namespace Cosmic.NET.WPF
         /// Gets the latest calculated output for the current cosmology and single redshift.
         /// </summary>
         public string CosmoText => _cosmoText.Value;
-        private readonly ObservableAsPropertyHelper<string> _cosmoText;
+        private readonly ObservableAsPropertyHelper<string> _cosmoText = ObservableAsPropertyHelper<string>.Default();
 
         /// <summary>
         /// Gets or sets the full path to the input file for batch mode.

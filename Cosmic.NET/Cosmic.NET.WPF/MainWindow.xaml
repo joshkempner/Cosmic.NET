@@ -91,6 +91,11 @@
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="18" />
         </Style>
+        <Style TargetType="Button" x:Key="Naked">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
     </Window.Resources>
     <Border Name="WindowBorder" BorderThickness="1">
         <DockPanel LastChildFill="True">
@@ -121,9 +126,6 @@
                         <Image Name="MinimizeWindowImage" Source="Resources/MinimizeWindow.png" Height="24" Width="24" VerticalAlignment="Center" />
                     </Button>
                 </DockPanel>
-                <DockPanel Name="RightTitlebarButtons" DockPanel.Dock="Right" HorizontalAlignment="Right">
-                    <Grid DockPanel.Dock="Right"/>
-                </DockPanel>
                 <Grid>
                     <Rectangle Fill="{Binding ElementName=SidePanel,Path=Background}" Width="{Binding ElementName=SidePanel,Path=ActualWidth}" HorizontalAlignment="Left" />
                     <Label Name="TitleText" Content="Cosmic" VerticalContentAlignment="Center" Padding="10,0"
@@ -131,41 +133,44 @@
                            MouseMove="TitleBar_MouseMove" />
                 </Grid>
             </DockPanel>
-            <StackPanel Name="SidePanel" Orientation="Horizontal" DockPanel.Dock="Left" Background="{DynamicResource SectionColor}">
-                <TextBlock Text="Cosmological Parameters" FontSize="24" Foreground="White" Height="36" VerticalAlignment="Top" Margin="0,10,0,0">
-                    <TextBlock.LayoutTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="-90"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </TextBlock.LayoutTransform>
-                </TextBlock>
-                <DockPanel LastChildFill="False" Margin="10,0,30,0">
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,10">
-                        <TextBlock FontSize="18" Foreground="White" Margin="0,0,5,0" Width="35">
-                        <Run>H</Run>
-                        <Run BaselineAlignment="Subscript" FontSize="12">0</Run>
-                        </TextBlock>
-                        <TextBox Name="HNought" Width="50" Style="{DynamicResource CosmoParam}" Text="70" TabIndex="0" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,10">
-                        <TextBlock FontSize="18" Foreground="White" Margin="0,0,5,0" Width="35">
-                        <Run>&#x03A9;</Run>
-                        <Run BaselineAlignment="Subscript" FontSize="12">m</Run>
-                        </TextBlock>
-                        <TextBox Name="OmegaMatter" Width="50" Style="{DynamicResource CosmoParam}" Text="0.3" TabIndex="1" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,10">
-                        <TextBlock FontSize="18" Foreground="White" Margin="0,0,5,0" Width="35">
-                        <Run>&#x03A9;</Run>
-                        <Run BaselineAlignment="Subscript" FontSize="12">&#x039b;</Run>
-                        </TextBlock>
-                        <TextBox Name="OmegaLambda" Width="50" Style="{DynamicResource CosmoParam}" Text="0.7" TabIndex="2" />
-                    </StackPanel>
-                </DockPanel>
-            </StackPanel>
+            <DockPanel Name="SidePanel" LastChildFill="True" DockPanel.Dock="Left" Background="{DynamicResource SectionColor}">
+                <TextBlock Name="Version" DockPanel.Dock="Bottom" Text="v1.0.0" Foreground="White" Margin="8,3" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Cosmological Parameters" FontSize="24" Foreground="White" Height="36" VerticalAlignment="Top" Margin="0,10,0,0">
+                        <TextBlock.LayoutTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-90"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                    <DockPanel LastChildFill="False" Margin="10,0,30,0">
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,10">
+                            <TextBlock FontSize="18" Foreground="White" Margin="0,0,5,0" Width="35">
+                            <Run>H</Run>
+                            <Run BaselineAlignment="Subscript" FontSize="12">0</Run>
+                            </TextBlock>
+                            <TextBox Name="HNought" Width="50" Style="{DynamicResource CosmoParam}" Text="70" TabIndex="0" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,10">
+                            <TextBlock FontSize="18" Foreground="White" Margin="0,0,5,0" Width="35">
+                            <Run>&#x03A9;</Run>
+                            <Run BaselineAlignment="Subscript" FontSize="12">m</Run>
+                            </TextBlock>
+                            <TextBox Name="OmegaMatter" Width="50" Style="{DynamicResource CosmoParam}" Text="0.3" TabIndex="1" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,10">
+                            <TextBlock FontSize="18" Foreground="White" Margin="0,0,5,0" Width="35">
+                            <Run>&#x03A9;</Run>
+                            <Run BaselineAlignment="Subscript" FontSize="12">&#x039b;</Run>
+                            </TextBlock>
+                            <TextBox Name="OmegaLambda" Width="50" Style="{DynamicResource CosmoParam}" Text="0.7" TabIndex="2" />
+                        </StackPanel>
+                    </DockPanel>
+                </StackPanel>
+            </DockPanel>
             <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource SectionColor}" Padding="10">
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Top" Text="Multiple Sources" FontSize="24"
@@ -205,7 +210,13 @@
                     <TextBlock Text="z" FontSize="18" Margin="0,0,10,0" />
                     <TextBox Name="Redshift" Width="100" TabIndex="3" />
                 </StackPanel>
-                <TextBlock Name="SingleSourceOutput" FontFamily="Lucida Console" FontSize="14" Margin="0,10,0,0" />
+                <Grid>
+                    <TextBlock Name="SingleSourceOutput" FontFamily="Lucida Console" FontSize="14" Margin="0,10,0,20" />
+                    <Button x:Name="CopyOutputToClipboard" Content="&#xe8c8;" HorizontalAlignment="Right" VerticalAlignment="Top"
+                            FontFamily="Segoe MDL2 Assets" FontSize="16"
+                            Style="{DynamicResource Naked}" Padding="5" Margin="0,4,0,0">
+                    </Button>
+                </Grid>
             </DockPanel>
         </DockPanel>
     </Border>

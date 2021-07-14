@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
@@ -23,18 +25,20 @@ namespace Cosmic.NET.WPF
 
             this.WhenActivated(d =>
             {
-                d(this.Bind(ViewModel, vm => vm.HNoughtText, v => v.HNought.Text));
-                d(this.Bind(ViewModel, vm => vm.OmegaMatterText, v => v.OmegaMatter.Text));
-                d(this.Bind(ViewModel, vm => vm.OmegaLambdaText, v => v.OmegaLambda.Text));
-                d(this.Bind(ViewModel, vm => vm.RedshiftText, v => v.Redshift.Text));
-                d(this.OneWayBind(ViewModel, vm => vm.CosmoText, v => v.SingleSourceOutput.Text));
-                d(this.Bind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputFilename.Text));
-                d(this.Bind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputFilename.ToolTip));
-                d(this.OneWayBind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputDescription.Visibility, s => string.IsNullOrWhiteSpace(s) ? Visibility.Visible : Visibility.Hidden));
-                d(this.BindCommand(ViewModel, vm => vm.GetInputFile, v => v.BrowseForInputFile));
-                d(this.BindCommand(ViewModel, vm => vm.ComputeAndSave, v => v.ComputeAndSave));
-                d(this.OneWayBind(ViewModel, vm => vm.SaveNotificationText, v => v.SavedNotification.Text));
-                d(this.WhenAnyValue(x => x.ViewModel.SaveNotificationText)
+                this.Bind(ViewModel, vm => vm.HNoughtText, v => v.HNought.Text).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.OmegaMatterText, v => v.OmegaMatter.Text).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.OmegaLambdaText, v => v.OmegaLambda.Text).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.RedshiftText, v => v.Redshift.Text).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.CosmoText, v => v.SingleSourceOutput.Text).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.CopyOutputToClipboard, v => v.CopyOutputToClipboard).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputFilename.Text).DisposeWith(d);
+                this.Bind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputFilename.ToolTip).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputDescription.Visibility,
+                    s => string.IsNullOrWhiteSpace(s) ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.GetInputFile, v => v.BrowseForInputFile).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.ComputeAndSave, v => v.ComputeAndSave).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.SaveNotificationText, v => v.SavedNotification.Text).DisposeWith(d);
+                this.WhenAnyValue(x => x.ViewModel.SaveNotificationText)
                       .Subscribe(
                           text =>
                           {
@@ -43,8 +47,8 @@ namespace Cosmic.NET.WPF
                               Storyboard.SetTargetProperty(FadeOutAnimation, new PropertyPath(OpacityProperty));
                               sb.Children.Add(FadeOutAnimation);
                               sb.Begin(SavedNotification);
-                          }));
-                d(ViewModel
+                          }); // this.WhenAnyValue is disposed automatically
+                ViewModel
                     .ParseError
                     .RegisterHandler(
                           interaction =>
@@ -56,8 +60,8 @@ namespace Cosmic.NET.WPF
                                             MessageBoxButton.OK,
                                             MessageBoxImage.Warning);
                               interaction.SetOutput(Unit.Default);
-                          }));
-                d(ViewModel
+                          }).DisposeWith(d);
+                ViewModel
                     .GetFileToOpen
                     .RegisterHandler(
                           interaction =>
@@ -65,8 +69,8 @@ namespace Cosmic.NET.WPF
                               var dlg = new OpenFileDialog { Filter = "Text file|*.txt" };
                               var gotAFile = dlg.ShowDialog();
                               interaction.SetOutput(gotAFile == true ? new FileInfo(dlg.FileName) : null);
-                          }));
-                d(ViewModel
+                          }).DisposeWith(d);
+                ViewModel
                       .GetFileToSave
                       .RegisterHandler(
                           interaction =>
@@ -79,12 +83,14 @@ namespace Cosmic.NET.WPF
                               interaction.SetOutput(new Tuple<FileInfo, MainWindowVM.FileType>(
                                                             gotAFile == true ? new FileInfo(dlg.FileName) : null,
                                                             dlg.FilterIndex == 1 ? MainWindowVM.FileType.Txt : MainWindowVM.FileType.Csv)); // FilterIndex is 1-based
-                          }));
+                          }).DisposeWith(d);
             });
 
             Deactivated += OnDeactivated;
             Activated += OnActivated;
             SourceInitialized += CoreHostView_SourceInitialized;
+
+            Version.Text = $"v{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}";
         }
 
         private static readonly DoubleAnimationUsingKeyFrames FadeOutAnimation = new DoubleAnimationUsingKeyFrames

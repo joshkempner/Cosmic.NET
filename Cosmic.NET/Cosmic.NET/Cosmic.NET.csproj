@@ -6,7 +6,7 @@
     <Version>1.1.1</Version>
     <AssemblyVersion>1.1.1</AssemblyVersion>
     <FileVersion>1.1.1</FileVersion>
-    <Copyright>Copyright © Joshua Kempner 2008-2020</Copyright>
+    <Copyright>Copyright © Joshua Kempner 2008-2021</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\cosmo\Cosmo.csproj" />
