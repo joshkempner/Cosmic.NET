@@ -70,7 +70,7 @@ jobs:
         dotnet-version: 5.0.101
 
     # Build
-    - run: dotnet build Cosmic.NET/cosmo/cosmo.csproj --configuration Release
+    - run: dotnet build Cosmic.NET/cosmo/Cosmo.csproj --configuration Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
