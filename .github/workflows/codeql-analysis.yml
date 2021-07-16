@@ -69,9 +69,8 @@ jobs:
       with:
         dotnet-version: 5.0.8
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
+    # Build
+    - run: dotnet build
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
