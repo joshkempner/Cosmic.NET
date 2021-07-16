@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using ReactiveUI;
@@ -30,30 +31,22 @@ namespace Cosmo
         /// Get or set the value of the Hubble constant.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value set is &lt;= 0</exception>
+        [Range(double.Epsilon, double.MaxValue)]
         public double H0
         {
             get => _h0;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(H0), "Value must be greater than 0");
-                this.RaiseAndSetIfChanged(ref _h0, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref _h0, value);
         }
 
         /// <summary>
         /// Get or set the value of the normalized density of matter.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value set is &lt; 0</exception>
+        [Range(0.0, double.MaxValue)]
         public double OmegaMatter
         {
             get => _omegaM;
-            set
-            {
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException(nameof(OmegaMatter), "Value must be at least 0");
-                this.RaiseAndSetIfChanged(ref _omegaM, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref _omegaM, value);
         }
 
         /// <summary>
@@ -91,13 +84,12 @@ namespace Cosmo
         /// Get or set the Redshift of the event.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the value set is &lt; 0</exception>
+        [Range(0.0, double.MaxValue)]
         public double Redshift
         {
             get => _z;
             set
             {
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException(nameof(Redshift), "Value must be at least 0");
                 this.RaiseAndSetIfChanged(ref _z, value);
             }
         }
@@ -196,7 +188,7 @@ namespace Cosmo
             var sb = new StringBuilder();
             sb.AppendFormat("{0}H_0 = {1}, Omega_m = {2}, Omega_L = {3}", leader, H0, OmegaMatter, OmegaLambda);
             if (Math.Abs(OmegaKappa) > double.Epsilon)
-                sb.AppendFormat(", Omega_k = {0}", OmegaKappa);
+                sb.AppendFormat(", Omega_k = {0:g3}", OmegaKappa);
             sb.AppendFormat(" (q_0 = {0})", q0);
             return sb.ToString();
         }
