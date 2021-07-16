@@ -37,9 +37,6 @@ jobs:
         # Learn more:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
-    env:
-      Solution_Name: Cosmic.NET
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -73,7 +70,7 @@ jobs:
         dotnet-version: 5.0.101
 
     # Build
-    - run: dotnet build --source Cosmic.NET --configuration Release
+    - run: dotnet build Cosmic.NET/Cosmic.NET --configuration Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
