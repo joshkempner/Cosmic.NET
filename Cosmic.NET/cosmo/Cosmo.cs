@@ -88,10 +88,7 @@ namespace Cosmo
         public double Redshift
         {
             get => _z;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _z, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref _z, value);
         }
 
         /// <summary>
