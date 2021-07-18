@@ -9,3 +9,5 @@ There are two versions:
 In addition, the "cosmo" library is designed to be used as a library by any .NET app.
 
 Contributions via pull requests are welcome.
+
+The original C++ code on which this was based is [in a separate repository](https://github.com/joshkempner/cosmic).
