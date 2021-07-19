@@ -72,5 +72,9 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
+    # Build
+    - name: Build
+      run: dotnet build Cosmic.NET/Cosmic.NET/Cosmic.NET.sln --configuration Release
+
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
