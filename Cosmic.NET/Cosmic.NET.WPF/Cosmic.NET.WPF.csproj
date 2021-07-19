@@ -18,7 +18,6 @@
     <ProjectReference Include="..\cosmo\Cosmo.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="reactiveui" Version="14.1.1" />
     <PackageReference Include="ReactiveUI.WPF" Version="14.1.1" />
   </ItemGroup>
   <ItemGroup>
