@@ -71,7 +71,7 @@ jobs:
 
     # Build
     - name: Build
-      run: dotnet msbuild Cosmic.NET/Cosmic.NET.sln --configuration Release
+      run: dotnet build Cosmic.NET/Cosmic.NET.sln --configuration Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
