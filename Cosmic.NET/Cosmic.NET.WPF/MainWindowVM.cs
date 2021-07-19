@@ -14,7 +14,7 @@ namespace Cosmic.NET.WPF
 {
     public class MainWindowVM : ReactiveObject
     {
-        private const double ThrottleDelay = 0.5;
+        private readonly TimeSpan ThrottleDelay = TimeSpan.FromMilliseconds(500);
 
         private const string HNoughtPos = "H-nought must be positive.";
         private const string HNoughtNum = "H-nought must be a number.";
@@ -24,7 +24,7 @@ namespace Cosmic.NET.WPF
         private const string ZNotNeg = "The redshift must be at least 0.";
         private const string ZNum = "The redshift must be a number.";
 
-        private readonly List<string> _activeErrors = new List<string>();
+        private readonly List<string> _activeErrors = new();
 
         public enum FileType
         {
@@ -32,9 +32,9 @@ namespace Cosmic.NET.WPF
             Csv
         }
 
-        public Interaction<string, Unit> ParseError { get; }
-        public Interaction<string, FileInfo> GetFileToOpen { get; }
-        public Interaction<string, Tuple<FileInfo, FileType>> GetFileToSave { get; }
+        public Interaction<string, Unit> ParseError { get; } = new();
+        public Interaction<string, FileInfo> GetFileToOpen { get; } = new();
+        public Interaction<string, Tuple<FileInfo, FileType>> GetFileToSave { get; } = new();
 
         /// <summary>
         /// Copy the single-redshift output to the clipboard.
@@ -51,10 +51,6 @@ namespace Cosmic.NET.WPF
 
         public MainWindowVM()
         {
-            ParseError = new Interaction<string, Unit>();
-            GetFileToOpen = new Interaction<string, FileInfo>();
-            GetFileToSave = new Interaction<string, Tuple<FileInfo, FileType>>();
-
             CopyOutputToClipboard = ReactiveCommand.CreateFromTask(
                                                 CopyOutput,
                                                 this.WhenAnyValue(x => x.CosmoText, t => !string.IsNullOrEmpty(t)));
@@ -75,7 +71,7 @@ namespace Cosmic.NET.WPF
             RedshiftText = Redshift.ToString(CultureInfo.InvariantCulture);
 
             this.WhenAnyValue(x => x.HNoughtText)
-                .Throttle(TimeSpan.FromSeconds(ThrottleDelay))
+                .Throttle(ThrottleDelay)
                 .Subscribe(h =>
                 {
                     if (string.IsNullOrWhiteSpace(h)) return;
@@ -96,7 +92,7 @@ namespace Cosmic.NET.WPF
 
 
             this.WhenAnyValue(x => x.OmegaMatterText)
-                .Throttle(TimeSpan.FromSeconds(ThrottleDelay))
+                .Throttle(ThrottleDelay)
                 .Subscribe(om =>
                 {
                     if (string.IsNullOrWhiteSpace(om)) return;
@@ -116,7 +112,7 @@ namespace Cosmic.NET.WPF
                 });
 
             this.WhenAnyValue(x => x.OmegaLambdaText)
-                .Throttle(TimeSpan.FromSeconds(ThrottleDelay))
+                .Throttle(ThrottleDelay)
                 .Subscribe(ol =>
                 {
                     if (string.IsNullOrWhiteSpace(ol)) return;
@@ -130,7 +126,7 @@ namespace Cosmic.NET.WPF
                 });
 
             this.WhenAnyValue(x => x.RedshiftText)
-                .Throttle(TimeSpan.FromSeconds(ThrottleDelay))
+                .Throttle(ThrottleDelay)
                 .Subscribe(z =>
                 {
                     if (string.IsNullOrWhiteSpace(z)) return;
