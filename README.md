@@ -1,4 +1,5 @@
 ![.NET Core Desktop](https://github.com/joshkempner/Cosmic.NET/workflows/.NET%20Core%20Desktop/badge.svg)
+[![CodeQL](https://github.com/joshkempner/Cosmic.NET/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/joshkempner/Cosmic.NET/actions/workflows/codeql-analysis.yml)
 # Cosmic.NET
 A small program that calculates the cosmological distances and timescales to an astronomical source using a user-defined cosmology at a given redshift.
 
