@@ -7,6 +7,6 @@
     <Copyright>Copyright © Joshua Kempner 2008-2021</Copyright>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="reactiveui" Version="16.3.9" />
+    <PackageReference Include="reactiveui" Version="16.3.10" />
   </ItemGroup>
 </Project>
