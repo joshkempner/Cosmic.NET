@@ -133,7 +133,7 @@
                            MouseMove="TitleBar_MouseMove" />
                 </Grid>
             </DockPanel>
-            <DockPanel Name="SidePanel" LastChildFill="True" DockPanel.Dock="Left" Background="{DynamicResource SectionColor}">
+            <DockPanel Name="SidePanel" LastChildFill="True" DockPanel.Dock="Left" Background="{DynamicResource SectionColor}" Margin="0,-1,0,0">
                 <TextBlock Name="Version" DockPanel.Dock="Bottom" Text="v1.0.0" Foreground="White" Margin="8,3" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Cosmological Parameters" FontSize="24" Foreground="White" Height="36" VerticalAlignment="Top" Margin="0,10,0,0">

@@ -53,7 +53,9 @@ namespace Cosmic.NET.WPF
         {
             CopyOutputToClipboard = ReactiveCommand.CreateFromTask(
                                                 CopyOutput,
-                                                this.WhenAnyValue(x => x.CosmoText, t => !string.IsNullOrEmpty(t)));
+                                                this.WhenAnyValue(
+                                                        x => x.CosmoText,
+                                                        t => !string.IsNullOrEmpty(t)));
             GetInputFile = ReactiveCommand.CreateFromTask(GetTheInputFile);
             ComputeAndSave = ReactiveCommand.CreateFromTask(
                                                 RunBatch,
@@ -72,9 +74,10 @@ namespace Cosmic.NET.WPF
 
             this.WhenAnyValue(x => x.HNoughtText)
                 .Throttle(ThrottleDelay)
+                .DistinctUntilChanged()
+                .Where(h => !string.IsNullOrWhiteSpace(h))
                 .Subscribe(h =>
                 {
-                    if (string.IsNullOrWhiteSpace(h)) return;
                     if (double.TryParse(h, out var temp))
                     {
                         if (temp <= 0)
@@ -93,9 +96,10 @@ namespace Cosmic.NET.WPF
 
             this.WhenAnyValue(x => x.OmegaMatterText)
                 .Throttle(ThrottleDelay)
+                .DistinctUntilChanged()
+                .Where(om => !string.IsNullOrWhiteSpace(om))
                 .Subscribe(om =>
                 {
-                    if (string.IsNullOrWhiteSpace(om)) return;
                     if (double.TryParse(om, out var temp))
                     {
                         if (temp < 0)
@@ -113,9 +117,10 @@ namespace Cosmic.NET.WPF
 
             this.WhenAnyValue(x => x.OmegaLambdaText)
                 .Throttle(ThrottleDelay)
+                .DistinctUntilChanged()
+                .Where(ol => !string.IsNullOrWhiteSpace(ol))
                 .Subscribe(ol =>
                 {
-                    if (string.IsNullOrWhiteSpace(ol)) return;
                     if (double.TryParse(ol, out var temp))
                     {
                         OmegaLambda = temp;
@@ -127,9 +132,10 @@ namespace Cosmic.NET.WPF
 
             this.WhenAnyValue(x => x.RedshiftText)
                 .Throttle(ThrottleDelay)
+                .DistinctUntilChanged()
+                .Where(z => !string.IsNullOrWhiteSpace(z))
                 .Subscribe(z =>
                 {
-                    if (string.IsNullOrWhiteSpace(z)) return;
                     if (double.TryParse(z, out var temp))
                     {
                         if (temp < 0)
@@ -359,13 +365,13 @@ namespace Cosmic.NET.WPF
 
         private static void RunOnUiThread(Action<object> action, object param = null)
         {
-            if (System.Windows.Application.Current?.Dispatcher.CheckAccess() ?? false)
+            if (Application.Current?.Dispatcher.CheckAccess() ?? false)
             {
                 action(param); // we're on the ui thread, just go for it
                 return;
             }
-            if (System.Windows.Application.Current != null)
-                System.Windows.Application.Current.Dispatcher.Invoke(action, param);
+            if (Application.Current != null)
+                Application.Current.Dispatcher.Invoke(action, param);
             else
                 throw new InvalidOperationException("Unable to run on UI thread!");
         }
