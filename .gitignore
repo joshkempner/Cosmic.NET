@@ -14,3 +14,4 @@
 *.user
 *.dtbcache
 *.dtbcache.v2
+/.vs
