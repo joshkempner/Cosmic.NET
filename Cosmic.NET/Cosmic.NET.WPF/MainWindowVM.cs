@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using Cosmo;
 using ReactiveUI;
-using ReactiveCommand = ReactiveUI.ReactiveCommand;
 
 namespace Cosmic.NET.WPF
 {
