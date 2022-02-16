@@ -6,7 +6,7 @@
     <Version>1.2.1</Version>
     <AssemblyVersion>1.2.1</AssemblyVersion>
     <FileVersion>1.2.1</FileVersion>
-    <Copyright>Copyright © Joshua Kempner 2008-2021</Copyright>
+    <Copyright>Copyright © Joshua Kempner 2008-2022</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\CloseWindow.png" />
