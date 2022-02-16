@@ -5,7 +5,7 @@ A small program that calculates the cosmological distances and timescales to an 
 
 There are two versions:
 1. An older Windows Forms UI.
-2. A newer WPF UI.
+2. A newer WPF UI built with [ReactiveUI](https://www.reactiveui.net/).
 
 In addition, the "cosmo" library is designed to be used as a library by any .NET app.
 
