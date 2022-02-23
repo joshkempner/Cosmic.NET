@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -39,51 +40,51 @@ namespace Cosmic.NET.WPF
                 this.BindCommand(ViewModel, vm => vm.ComputeAndSave, v => v.ComputeAndSave).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.SaveNotificationText, v => v.SavedNotification.Text).DisposeWith(d);
                 this.WhenAnyValue(x => x.ViewModel.SaveNotificationText)
-                      .Subscribe(
-                          text =>
-                          {
-                              if (string.IsNullOrEmpty(text)) return;
-                              var sb = new Storyboard();
-                              Storyboard.SetTargetProperty(FadeOutAnimation, new PropertyPath(OpacityProperty));
-                              sb.Children.Add(FadeOutAnimation);
-                              sb.Begin(SavedNotification);
-                          }); // this.WhenAnyValue is disposed automatically
+                    .Where(text => !string.IsNullOrEmpty(text))
+                    .Subscribe(
+                        text =>
+                        {
+                            var sb = new Storyboard();
+                            Storyboard.SetTargetProperty(FadeOutAnimation, new PropertyPath(OpacityProperty));
+                            sb.Children.Add(FadeOutAnimation);
+                            sb.Begin(SavedNotification);
+                        }); // this.WhenAnyValue is disposed automatically
                 ViewModel
                     .ParseError
                     .RegisterHandler(
-                          interaction =>
-                          {
-                              MessageBox.Show(
-                                            this,
-                                            interaction.Input,
-                                            "Invalid Input",
-                                            MessageBoxButton.OK,
-                                            MessageBoxImage.Warning);
-                              interaction.SetOutput(Unit.Default);
-                          }).DisposeWith(d);
+                        interaction =>
+                        {
+                            MessageBox.Show(
+                                        this,
+                                        interaction.Input,
+                                        "Invalid Input",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Warning);
+                            interaction.SetOutput(Unit.Default);
+                        }).DisposeWith(d);
                 ViewModel
                     .GetFileToOpen
                     .RegisterHandler(
-                          interaction =>
-                          {
-                              var dlg = new OpenFileDialog { Filter = "Text file|*.txt" };
-                              var gotAFile = dlg.ShowDialog();
-                              interaction.SetOutput(gotAFile == true ? new FileInfo(dlg.FileName) : null);
-                          }).DisposeWith(d);
+                        interaction =>
+                        {
+                            var dlg = new OpenFileDialog { Filter = "Text file|*.txt" };
+                            var gotAFile = dlg.ShowDialog();
+                            interaction.SetOutput(gotAFile == true ? new FileInfo(dlg.FileName) : null);
+                        }).DisposeWith(d);
                 ViewModel
-                      .GetFileToSave
-                      .RegisterHandler(
-                          interaction =>
-                          {
-                              var dlg = new SaveFileDialog
-                              {
-                                  Filter = @"Text document (.txt)|*.txt|CSV document (.csv)|*.csv"
-                              };
-                              var gotAFile = dlg.ShowDialog();
-                              interaction.SetOutput(new Tuple<FileInfo, MainWindowVM.FileType>(
-                                                            gotAFile == true ? new FileInfo(dlg.FileName) : null,
-                                                            dlg.FilterIndex == 1 ? MainWindowVM.FileType.Txt : MainWindowVM.FileType.Csv)); // FilterIndex is 1-based
-                          }).DisposeWith(d);
+                    .GetFileToSave
+                    .RegisterHandler(
+                        interaction =>
+                        {
+                            var dlg = new SaveFileDialog
+                            {
+                                Filter = @"Text document (.txt)|*.txt|CSV document (.csv)|*.csv"
+                            };
+                            var gotAFile = dlg.ShowDialog();
+                            interaction.SetOutput(new Tuple<FileInfo, MainWindowVM.FileType>(
+                                                        gotAFile == true ? new FileInfo(dlg.FileName) : null,
+                                                        dlg.FilterIndex == 1 ? MainWindowVM.FileType.Txt : MainWindowVM.FileType.Csv)); // FilterIndex is 1-based
+                        }).DisposeWith(d);
             });
 
             Deactivated += OnDeactivated;

@@ -212,9 +212,20 @@ namespace Cosmic.NET.WPF
                 try
                 {
                     var cosmology = new Cosmology(HNought, OmegaMatter, OmegaLambda);
-                    var separator = _fileType == FileType.Txt ? "\t" : ",";
+                    var separator = _fileType switch
+                    {
+                        FileType.Txt => "\t",
+                        FileType.Csv => ",",
+                        _ => throw new Exception("Unexpected file type.")
+                    };
+                    var leader = _fileType switch
+                    {
+                        FileType.Txt => "# ",
+                        FileType.Csv => string.Empty,
+                        _ => throw new Exception("Unexpected file type.")
+                    };
                     await using var sw = new StreamWriter(OutputFile.FullName);
-                    await sw.WriteLineAsync(cosmology.GetShortFormHeader("# ", separator));
+                    await sw.WriteLineAsync(cosmology.GetShortFormHeader(leader, separator));
                     foreach (var redshift in inputLines)
                     {
                         cosmology.Redshift = redshift;
@@ -374,6 +385,5 @@ namespace Cosmic.NET.WPF
             else
                 throw new InvalidOperationException("Unable to run on UI thread!");
         }
-
     }
 }
