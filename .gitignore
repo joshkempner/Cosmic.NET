@@ -15,3 +15,9 @@
 *.dtbcache
 *.dtbcache.v2
 /.vs
+/Cosmic.NET/bin/Debug/net7.0-windows
+/Cosmic.NET/obj
+/Cosmic.NET.WPF/bin/Debug/net7.0-windows
+/Cosmic.NET.WPF/obj
+/cosmo/bin/Debug/net7.0
+/cosmo/obj
