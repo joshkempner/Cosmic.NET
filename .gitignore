@@ -4,20 +4,13 @@
 
 *.suo
 /Cosmic.NET/.vs
-/Cosmic.NET/Cosmic.NET/bin
-/Cosmic.NET/Cosmic.NET/obj
-/Cosmic.NET/Cosmic.NET.WPF/bin
-/Cosmic.NET/Cosmic.NET.WPF/obj
-/Cosmic.NET/cosmo/bin
-/Cosmic.NET/cosmo/obj
-/Cosmic.NET/packages
+/Cosmic.NET/bin
+/Cosmic.NET/obj
+/Cosmic.NET.WPF/bin
+/Cosmic.NET.WPF/obj
+/cosmo/bin
+/cosmo/obj
 *.user
 *.dtbcache
 *.dtbcache.v2
 /.vs
-/Cosmic.NET/bin/Debug/net7.0-windows
-/Cosmic.NET/obj
-/Cosmic.NET.WPF/bin/Debug/net7.0-windows
-/Cosmic.NET.WPF/obj
-/cosmo/bin/Debug/net7.0
-/cosmo/obj
