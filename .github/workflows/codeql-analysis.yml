@@ -17,8 +17,6 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ main ]
-  schedule:
-    - cron: '34 6 * * 2'
 
 jobs:
   analyze:
@@ -71,7 +69,7 @@ jobs:
 
     # Build
     - name: Build
-      run: dotnet build Cosmic.NET/Cosmic.NET.sln --configuration Release
+      run: dotnet build Cosmic.NET.sln --configuration Release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
