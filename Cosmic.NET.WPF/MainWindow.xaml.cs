@@ -12,13 +12,15 @@ using System.Windows.Interop;
 using System.Windows.Media.Animation;
 using Microsoft.Win32;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace Cosmic.NET.WPF;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : IViewFor<MainWindowVM> {
+[IViewFor<MainWindowVM>]
+public partial class MainWindow {
     public MainWindow() {
         InitializeComponent();
 
@@ -28,13 +30,15 @@ public partial class MainWindow : IViewFor<MainWindowVM> {
             this.Bind(ViewModel, vm => vm.OmegaLambdaText, v => v.OmegaLambda.Text).DisposeWith(d);
             this.Bind(ViewModel, vm => vm.RedshiftText, v => v.Redshift.Text).DisposeWith(d);
             this.OneWayBind(ViewModel, vm => vm.CosmoText, v => v.SingleSourceOutput.Text).DisposeWith(d);
-            this.BindCommand(ViewModel, vm => vm.CopyOutputToClipboard, v => v.CopyOutputToClipboard).DisposeWith(d);
+            this.BindCommand(ViewModel, vm => vm.CopyOutputCommand, v => v.CopyOutputToClipboard).DisposeWith(d);
+#pragma warning disable CS8602 // Dereference of a possibly null reference. - RxUI allows null values in property expressions
             this.Bind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputFilename.Text).DisposeWith(d);
             this.Bind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputFilename.ToolTip).DisposeWith(d);
             this.OneWayBind(ViewModel, vm => vm.BatchFile.FullName, v => v.InputDescription.Visibility,
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 s => string.IsNullOrWhiteSpace(s) ? Visibility.Visible : Visibility.Hidden).DisposeWith(d);
-            this.BindCommand(ViewModel, vm => vm.GetInputFile, v => v.BrowseForInputFile).DisposeWith(d);
-            this.BindCommand(ViewModel, vm => vm.ComputeAndSave, v => v.ComputeAndSave).DisposeWith(d);
+            this.BindCommand(ViewModel, vm => vm.GetInputFileCommand, v => v.BrowseForInputFile).DisposeWith(d);
+            this.BindCommand(ViewModel, vm => vm.ComputeAndSaveCommand, v => v.ComputeAndSave).DisposeWith(d);
             this.OneWayBind(ViewModel, vm => vm.SaveNotificationText, v => v.SavedNotification.Text).DisposeWith(d);
             this.WhenAnyValue(x => x.ViewModel.SaveNotificationText)
                 .Where(text => !string.IsNullOrEmpty(text))
@@ -97,28 +101,8 @@ public partial class MainWindow : IViewFor<MainWindowVM> {
         ]
     };
 
-    #region IViewFor
-
-    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        nameof(ViewModel),
-        typeof(MainWindowVM),
-        typeof(MainWindow),
-        new PropertyMetadata(default(MainWindowVM)));
-
-    public MainWindowVM ViewModel {
-        get => (MainWindowVM)GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
-    }
-
-    object IViewFor.ViewModel {
-        get => ViewModel;
-        set => ViewModel = (MainWindowVM)value;
-    }
-
-    #endregion
-
     private readonly List<IDisposable> _rolloverEffects = [];
-    private void OnActivated(object sender, EventArgs eventArgs) {
+    private void OnActivated(object? sender, EventArgs eventArgs) {
         WindowBorder.BorderBrush = SystemColors.HighlightBrush;
         TitleText.Opacity = 1.0;
         foreach (var effect in _rolloverEffects)
@@ -128,7 +112,7 @@ public partial class MainWindow : IViewFor<MainWindowVM> {
         CloseWindowImage.Opacity = 1.0;
     }
 
-    private void OnDeactivated(object sender, EventArgs eventArgs) {
+    private void OnDeactivated(object? sender, EventArgs eventArgs) {
         WindowBorder.BorderBrush = SystemColors.ActiveBorderBrush;
         TitleText.Opacity = 0.6;
         _rolloverEffects.Add(
@@ -203,7 +187,7 @@ public partial class MainWindow : IViewFor<MainWindowVM> {
         Marshal.StructureToPtr(mmi, lParam, true);
     }
 
-    private void CoreHostView_SourceInitialized(object sender, EventArgs e) {
+    private void CoreHostView_SourceInitialized(object? sender, EventArgs e) {
         var handle = new WindowInteropHelper(this).Handle;
         var hwndSource = HwndSource.FromHwnd(handle);
         hwndSource?.AddHook(WindowProc);

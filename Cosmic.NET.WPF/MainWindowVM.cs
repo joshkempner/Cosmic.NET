@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using Cosmo;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace Cosmic.NET.WPF;
 
-public class MainWindowVM : ReactiveObject {
+public partial class MainWindowVM : ReactiveObject {
     private readonly TimeSpan _throttleDelay = TimeSpan.FromMilliseconds(500);
 
     private const string HNoughtPos = "H-nought must be positive.";
@@ -24,40 +25,26 @@ public class MainWindowVM : ReactiveObject {
 
     private readonly List<string> _activeErrors = [];
 
+    private readonly IObservable<bool> _canCopyOutput;
+    private readonly IObservable<bool> _canComputeAndSave;
+
     public enum FileType {
         Txt,
         Csv
     }
 
     public Interaction<string, Unit> ParseError { get; } = new();
-    public Interaction<string, FileInfo> GetFileToOpen { get; } = new();
-    public Interaction<string, (FileInfo, FileType)> GetFileToSave { get; } = new();
-
-    /// <summary>
-    /// Copy the single-redshift output to the clipboard.
-    /// </summary>
-    public ReactiveCommand<Unit, Unit> CopyOutputToClipboard { get; }
-    /// <summary>
-    /// Prompt the user for the input file for batch processing.
-    /// </summary>
-    public ReactiveCommand<Unit, Unit> GetInputFile { get; }
-    /// <summary>
-    /// Prompt the user for an output file, then compute the set of redshifts in the provided batch file and write them to the output file.
-    /// </summary>
-    public ReactiveCommand<Unit, Unit> ComputeAndSave { get; }
+    public Interaction<string, FileInfo?> GetFileToOpen { get; } = new();
+    public Interaction<string, (FileInfo?, FileType)> GetFileToSave { get; } = new();
 
     public MainWindowVM() {
-        CopyOutputToClipboard = ReactiveCommand.CreateFromTask(
-            CopyOutput,
-            this.WhenAnyValue(
-                x => x.CosmoText,
-                t => !string.IsNullOrEmpty(t)));
-        GetInputFile = ReactiveCommand.CreateFromTask(GetTheInputFile);
-        ComputeAndSave = ReactiveCommand.CreateFromTask(
-            RunBatch,
+        _canCopyOutput = this.WhenAnyValue(
+            x => x.CosmoText,
+            t => !string.IsNullOrEmpty(t));
+        _canComputeAndSave =
             this.WhenAnyValue(
                 x => x.BatchFile,
-                input => input?.Exists ?? false));
+                input => input?.Exists ?? false);
 
         HNought = 71;
         OmegaMatter = 0.27;
@@ -132,35 +119,49 @@ public class MainWindowVM : ReactiveObject {
                     ShowError(ZNum);
             });
 
-        this.WhenAnyValue(
-                x => x.HNought,
-                x => x.OmegaMatter,
-                x => x.OmegaLambda,
-                x => x.Redshift,
-                (h, om, ol, z) => {
-                    try {
-                        var cosmo = new Cosmology(h, om, ol) { Redshift = z };
-                        return cosmo.ToString();
-                    } catch (Exception) {
-                        return string.Empty;
-                    }
-                })
-            .ObserveOn(RxApp.MainThreadScheduler)
-            .ToProperty(this, x => x.CosmoText, out _cosmoText);
+        _cosmoTextHelper =
+            this.WhenAnyValue(
+                    x => x.HNought,
+                    x => x.OmegaMatter,
+                    x => x.OmegaLambda,
+                    x => x.Redshift,
+                    (h, om, ol, z) => {
+                        try {
+                            var cosmo = new Cosmology(h, om, ol) { Redshift = z };
+                            return cosmo.ToString();
+                        } catch (Exception) {
+                            return null;
+                        }
+                    })
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToProperty(this, nameof(CosmoText));
     }
 
+    /// <summary>
+    /// Copy the single-redshift output to the clipboard.
+    /// </summary>
+    [ReactiveCommand(CanExecute = nameof(_canCopyOutput))]
     private async Task CopyOutput() {
-        await Task.Run(() => Application.Current.Dispatcher.Invoke(() => Clipboard.SetText(CosmoText)));
+        await Observable.Start(() => Clipboard.SetText(CosmoText ?? string.Empty), RxApp.MainThreadScheduler);
     }
 
-    private async Task GetTheInputFile() {
+    /// <summary>
+    /// Prompt the user for the input file for batch processing.
+    /// </summary>
+    [ReactiveCommand]
+    private async Task GetInputFile() {
         var file = await GetFileToOpen.Handle(string.Empty);
         if (file != null)
             BatchFile = file;
     }
 
-    private async Task RunBatch() {
-        await Task.Run(async () => {
+    /// <summary>
+    /// Prompt the user for an output file, then compute the set of redshifts in the provided batch file and write them to the output file.
+    /// </summary>
+    [ReactiveCommand(CanExecute = nameof(_canComputeAndSave))]
+    private async Task ComputeAndSave() {
+        await Observable.StartAsync(async () => {
+            if (BatchFile == null) return;
             var (outputFile, fileType) = await GetFileToSave.Handle("cosmic.txt");
             if (outputFile == null) return;
             OutputFile = outputFile;
@@ -174,7 +175,7 @@ public class MainWindowVM : ReactiveObject {
                 while (await sr.ReadLineAsync() is { } line)
                     inputLines.Add(double.Parse(line));
             } catch (Exception) {
-                await Observable.Start(
+                await Observable.StartAsync(
                     async () =>
                         await ParseError.Handle(
                             "An error occurred reading the input file. Check the file to make sure it has one redshift per line and nothing else."),
@@ -202,119 +203,74 @@ public class MainWindowVM : ReactiveObject {
                     await sw.WriteLineAsync(cosmology.GetShortFormOutput(separator));
                 }
             } catch (Exception) {
-                await Observable.Start(async () => await ParseError.Handle("An error occurred writing the output file."),
+                await Observable.StartAsync(async () => await ParseError.Handle("An error occurred writing the output file."),
                     RxApp.MainThreadScheduler);
                 return;
             }
 
             await Observable.Start(() => SaveNotificationText = $"Results saved to {OutputFile.Name}",
                 RxApp.MainThreadScheduler);
-        });
+        }, RxApp.TaskpoolScheduler);
     }
 
     /// <summary>
     /// Gets or sets the current text shown in the UI for the Hubble constant.
     /// </summary>
-    public string HNoughtText {
-        get => _hNoughtText;
-        set => this.RaiseAndSetIfChanged(ref _hNoughtText, value);
-    }
-    private string _hNoughtText;
+    [Reactive] public partial string HNoughtText { get; set; }
 
     /// <summary>
     /// Gets or sets the current value of the Hubble constant.
     /// </summary>
-    private double HNought {
-        get => _hNought;
-        set => this.RaiseAndSetIfChanged(ref _hNought, value);
-    }
-    private double _hNought;
+    [Reactive] private partial double HNought { get; set; }
 
     /// <summary>
     /// Gets or sets the current text shown in the UI for the density attributed to matter.
     /// </summary>
-    public string OmegaMatterText {
-        get => _omegaMatterText;
-        set => this.RaiseAndSetIfChanged(ref _omegaMatterText, value);
-    }
-    private string _omegaMatterText;
+    [Reactive] public partial string OmegaMatterText { get; set; }
 
     /// <summary>
     /// Gets or sets the current value of the density attributed to matter.
     /// </summary>
-    private double OmegaMatter {
-        get => _omegaMatter;
-        set => this.RaiseAndSetIfChanged(ref _omegaMatter, value);
-    }
-    private double _omegaMatter;
+    [Reactive] private partial double OmegaMatter { get; set; }
 
     /// <summary>
     /// Gets or sets the current text shown in the UI for the density attributed to the cosmological constant.
     /// </summary>
-    public string OmegaLambdaText {
-        get => _omegaLambdaText;
-        set => this.RaiseAndSetIfChanged(ref _omegaLambdaText, value);
-    }
-    private string _omegaLambdaText;
+    [Reactive] public partial string OmegaLambdaText { get; set; }
 
     /// <summary>
     /// Gets or sets the current value of the density attributed to the cosmological constant.
     /// </summary>
-    private double OmegaLambda {
-        get => _omegaLambda;
-        set => this.RaiseAndSetIfChanged(ref _omegaLambda, value);
-    }
-    private double _omegaLambda;
+    [Reactive] private partial double OmegaLambda { get; set; }
 
     /// <summary>
     /// Gets or sets the current text shown in the UI for the single redshift.
     /// </summary>
-    public string RedshiftText {
-        get => _redshiftText;
-        set => this.RaiseAndSetIfChanged(ref _redshiftText, value);
-    }
-    private string _redshiftText;
+    [Reactive] public partial string RedshiftText { get; set; }
 
     /// <summary>
     /// Gets or sets the current single redshift.
     /// </summary>
-    private double Redshift {
-        get => _redshift;
-        set => this.RaiseAndSetIfChanged(ref _redshift, value);
-    }
-    private double _redshift;
+    [Reactive] private partial double Redshift { get; set; }
 
     /// <summary>
     /// Gets the latest calculated output for the current cosmology and single redshift.
     /// </summary>
-    public string CosmoText => _cosmoText.Value;
-    private readonly ObservableAsPropertyHelper<string> _cosmoText = ObservableAsPropertyHelper<string>.Default();
+    [ObservableAsProperty] public partial string? CosmoText { get; }
 
     /// <summary>
     /// Gets or sets the full path to the input file for batch mode.
     /// </summary>
-    public FileInfo BatchFile {
-        get => _batchFile;
-        private set => this.RaiseAndSetIfChanged(ref _batchFile, value);
-    }
-    private FileInfo _batchFile;
+    [Reactive] public partial FileInfo? BatchFile { get; private set; }
 
     /// <summary>
     /// Gets or sets the full path to the output file for batch mode.
     /// </summary>
-    private FileInfo OutputFile {
-        get => _outputFile;
-        set => this.RaiseAndSetIfChanged(ref _outputFile, value);
-    }
-    private FileInfo _outputFile;
+    [Reactive] private partial FileInfo? OutputFile { get; set; }
 
     private FileType _fileType;
 
-    public string SaveNotificationText {
-        get => _saveNotificationText;
-        private set => this.RaiseAndSetIfChanged(ref _saveNotificationText, value);
-    }
-    private string _saveNotificationText;
+    [Reactive] public partial string? SaveNotificationText { get; private set; }
 
     private void ClearError(string errorMsg) {
         _activeErrors.Remove(errorMsg);
@@ -323,6 +279,6 @@ public class MainWindowVM : ReactiveObject {
     private void ShowError(string errorMsg) {
         if (_activeErrors.Contains(errorMsg)) return;
         _activeErrors.Add(errorMsg);
-        Observable.Start(async () => await ParseError.Handle(errorMsg), RxApp.MainThreadScheduler);
+        Observable.StartAsync(async () => await ParseError.Handle(errorMsg), RxApp.MainThreadScheduler);
     }
 }
