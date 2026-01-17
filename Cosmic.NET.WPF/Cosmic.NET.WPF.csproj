@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>1.2.2</Version>
-    <AssemblyVersion>1.2.2</AssemblyVersion>
-    <FileVersion>1.2.2</FileVersion>
-    <Copyright>Copyright © Joshua Kempner 2008-2022</Copyright>
+    <Version>1.3.0</Version>
+    <AssemblyVersion>1.3.0</AssemblyVersion>
+    <FileVersion>1.3.0</FileVersion>
+    <Copyright>Copyright © Joshua Kempner 2008-2026</Copyright>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\CloseWindow.png" />
@@ -18,7 +19,7 @@
     <ProjectReference Include="..\cosmo\Cosmo.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ReactiveUI.WPF" Version="18.3.1" />
+    <PackageReference Include="ReactiveUI.WPF" Version="22.3.1" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\CloseWindow.png" />

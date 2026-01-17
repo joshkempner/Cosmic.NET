@@ -1,26 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using ReactiveUI;
-using Splat;
+﻿using System.Windows;
 
-namespace Cosmic.NET.WPF
-{
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
-    {
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            base.OnStartup(e);
+namespace Cosmic.NET.WPF;
 
-            var mainWindow = new MainWindow { ViewModel = new MainWindowVM() };
-            mainWindow.Show();
-        }
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App : Application {
+    protected override void OnStartup(StartupEventArgs e) {
+        base.OnStartup(e);
+
+        var mainWindow = new MainWindow { ViewModel = new MainWindowVM() };
+        mainWindow.Show();
     }
 }
